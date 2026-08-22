@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://b38u586cienfc"]
+
+[ext_resource type="Script" uid="uid://x72t824xw1rm" path="res://scenes/entities/player/stats_panel.gd" id="1_d28uf"]
+[ext_resource type="Theme" uid="uid://hem02ukrgpc0" path="res://themes/menu_resource_bar.tres" id="2_lpe7m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpe7m"]
+bg_color = Color(0.43137255, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72464263, 0.72464263, 0.7246424, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ejd3"]
+bg_color = Color(0.18431373, 0.77254903, 0.36078432, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vbai"]
+bg_color = Color(0.33238885, 0.24160996, 0.058556512, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72464263, 0.72464263, 0.7246424, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vh34r"]
+bg_color = Color(1, 0.6392157, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="StatsView" type="Control" unique_id=89320526]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d28uf")
+
+[node name="Title" type="Label" parent="." unique_id=2105045601]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 520.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 48
+text = "Stats"
+
+[node name="PlayerInfo" type="VBoxContainer" parent="." unique_id=1011116581]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 140.0
+offset_right = 520.0
+offset_bottom = 240.0
+
+[node name="PlayerName" type="HBoxContainer" parent="PlayerInfo" unique_id=1968231309]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NameLabel" type="Label" parent="PlayerInfo/PlayerName" unique_id=1054787960]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Player"
+
+[node name="LevelLabel" type="Label" parent="PlayerInfo/PlayerName" unique_id=1538244188]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Lvl. XX"
+
+[node name="XPBar" type="ProgressBar" parent="PlayerInfo" unique_id=1298010931]
+layout_mode = 2
+size_flags_vertical = 2
+theme = ExtResource("2_lpe7m")
+
+[node name="ResourceBars" type="VBoxContainer" parent="." unique_id=1092216221]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 260.0
+offset_right = 520.0
+offset_bottom = 460.0
+
+[node name="HPRow" type="HBoxContainer" parent="ResourceBars" unique_id=60987606]
+custom_minimum_size = Vector2(500, 50)
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="ResourceBars/HPRow" unique_id=693663475]
+custom_minimum_size = Vector2(75, 20)
+layout_mode = 2
+text = "HP"
+
+[node name="HPBar" type="ProgressBar" parent="ResourceBars/HPRow" unique_id=1395224079]
+custom_minimum_size = Vector2(400, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("2_lpe7m")
+theme_override_styles/background = SubResource("StyleBoxFlat_lpe7m")
+theme_override_styles/fill = SubResource("StyleBoxFlat_7ejd3")
+show_percentage = false
+
+[node name="HPValue" type="Label" parent="ResourceBars/HPRow/HPBar" unique_id=1020623093]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP / MAX HP"
+
+[node name="SPRow" type="HBoxContainer" parent="ResourceBars" unique_id=391613598]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+
+[node name="SPLabel" type="Label" parent="ResourceBars/SPRow" unique_id=1831277824]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+text = "SP"
+
+[node name="SPBar" type="ProgressBar" parent="ResourceBars/SPRow" unique_id=1701731659]
+custom_minimum_size = Vector2(400, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("2_lpe7m")
+theme_override_styles/background = SubResource("StyleBoxFlat_4vbai")
+theme_override_styles/fill = SubResource("StyleBoxFlat_vh34r")
+show_percentage = false
+
+[node name="SPValue" type="Label" parent="ResourceBars/SPRow/SPBar" unique_id=1035585295]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "SP / MAX SP"
+
+[node name="StatsGrid" type="HBoxContainer" parent="." unique_id=1484076694]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 480.0
+offset_right = 770.0
+offset_bottom = 708.0
+
+[node name="MinorStats" type="VBoxContainer" parent="StatsGrid" unique_id=527022820]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ATK" type="HBoxContainer" parent="StatsGrid/MinorStats" unique_id=2117471996]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="ATKLabel" type="Label" parent="StatsGrid/MinorStats/ATK" unique_id=706499460]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ATK: "
+
+[node name="ATKValue" type="Label" parent="StatsGrid/MinorStats/ATK" unique_id=1487229276]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX"
+
+[node name="DEF" type="HBoxContainer" parent="StatsGrid/MinorStats" unique_id=7137032]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="DEFLabel" type="Label" parent="StatsGrid/MinorStats/DEF" unique_id=1205155057]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DEF:"
+
+[node name="DEFValue" type="Label" parent="StatsGrid/MinorStats/DEF" unique_id=705233973]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX"
+
+[node name="SPD" type="HBoxContainer" parent="StatsGrid/MinorStats" unique_id=1729549523]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="SPDLabel" type="Label" parent="StatsGrid/MinorStats/SPD" unique_id=958043908]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SPD:"
+
+[node name="SPDValue" type="Label" parent="StatsGrid/MinorStats/SPD" unique_id=495548131]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX"
+
+[node name="MajorStats" type="VBoxContainer" parent="StatsGrid" unique_id=760160238]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HPRegen" type="HBoxContainer" parent="StatsGrid/MajorStats" unique_id=1577768075]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="HPRegenLabel" type="Label" parent="StatsGrid/MajorStats/HPRegen" unique_id=1543680898]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "HP Regen:"
+
+[node name="HPRegenValue" type="Label" parent="StatsGrid/MajorStats/HPRegen" unique_id=1868112741]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX/s"
+
+[node name="SPRegen" type="HBoxContainer" parent="StatsGrid/MajorStats" unique_id=2057838346]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="SPRegenLabel" type="Label" parent="StatsGrid/MajorStats/SPRegen" unique_id=832203682]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SP Regen:"
+
+[node name="SPRegenValue" type="Label" parent="StatsGrid/MajorStats/SPRegen" unique_id=645454176]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX/s"
+
+[node name="SkillSlots" type="HBoxContainer" parent="StatsGrid/MajorStats" unique_id=2121906772]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="SkillSlotsLabel" type="Label" parent="StatsGrid/MajorStats/SkillSlots" unique_id=406397635]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Skill Slots:"
+
+[node name="SkillSlotsValue" type="Label" parent="StatsGrid/MajorStats/SkillSlots" unique_id=469188660]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XX"

@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bowc6gtinrchh"]
+
+[ext_resource type="Script" uid="uid://ckcdwthss01kq" path="res://scenes/levels/main.gd" id="1_j4d2a"]
+[ext_resource type="PackedScene" uid="uid://dmgpjw86fugv8" path="res://scenes/levels/world.tscn" id="1_y0acb"]
+[ext_resource type="PackedScene" uid="uid://j5cpbs2nxee5" path="res://scenes/entities/player/player.tscn" id="2_j4d2a"]
+[ext_resource type="PackedScene" uid="uid://bkg1ifocfhv8h" path="res://scenes/levels/camera_controller.tscn" id="5_b6bv0"]
+[ext_resource type="PackedScene" uid="uid://b3mfu23tmy3sg" path="res://scenes/entities/npcs/npc.tscn" id="5_u81e1"]
+
+[node name="Main" type="Node3D" unique_id=1706958914]
+script = ExtResource("1_j4d2a")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1894896641]
+transform = Transform3D(0.9659258, 0.22414388, -0.1294095, 0, 0.49999997, 0.86602545, 0.25881904, -0.8365163, 0.48296288, 0, 500, 0)
+light_color = Color(0.99215686, 1, 1, 1)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="World" parent="." unique_id=4041304 instance=ExtResource("1_y0acb")]
+
+[node name="Player" parent="." unique_id=1313099410 node_paths=PackedStringArray("camera") instance=ExtResource("2_j4d2a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, 6.537318)
+camera = NodePath("../CameraController")
+sp = 0.0
+max_sp = 100.0
+
+[node name="NPC" parent="." unique_id=21563850 node_paths=PackedStringArray("routine_point_a", "routine_point_b") instance=ExtResource("5_u81e1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.995529, 3.5000005, 0)
+routine_point_a = NodePath("../Routine/PointA")
+routine_point_b = NodePath("../Routine/PointB")
+
+[node name="CameraController" parent="." unique_id=1037927067 instance=ExtResource("5_b6bv0")]
+
+[node name="Routine" type="Node3D" parent="." unique_id=498905974]
+
+[node name="PointA" type="Marker3D" parent="Routine" unique_id=144306402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.624213, 2.5, 8.61494)
+
+[node name="PointB" type="Marker3D" parent="Routine" unique_id=1105459541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0996246, 2.4999995, -1.3202553)
