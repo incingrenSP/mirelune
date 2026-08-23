@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://bglbrhvcvosj2" path="res://graphics/characters/test_run.png" id="4_8akj5"]
 [ext_resource type="Texture2D" uid="uid://daxbx2umuhr4" path="res://graphics/characters/test_walk.png" id="5_bj7e2"]
 [ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="8_1murt"]
-[ext_resource type="Script" uid="uid://b25hxi274pitq" path="res://scenes/entities/player/player_trigger_area.gd" id="8_5sj0x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bjvvg"]
 atlas = ExtResource("3_bjvvg")
@@ -289,13 +288,26 @@ material = SubResource("StandardMaterial3D_04okd")
 size = Vector2(0.75, 0.1)
 center_offset = Vector3(-0.125, -0.12, 0.01)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_gkrjc"]
-radius = 3.0
-
 [node name="Player" unique_id=21563850 node_paths=PackedStringArray("trigger_area") groups=["player"] instance=ExtResource("1_1hmtu")]
 script = ExtResource("2_bjvvg")
-trigger_area = NodePath("PlayerTriggerArea")
 IN_COMBAT = false
+player_name = "Player"
+player_level = 1
+xp = 0
+max_xp = 100
+sp = 0.0
+max_sp = 100.0
+atk = 10
+def = 5
+spd = 4
+hp_regen_rate = 0.0
+sp_regen_rate = 5.0
+unlocked_active_slots = 3
+unlocked_passive_slots = 3
+equipped_active_skills = Array[String](["", "", ""])
+equipped_passive_skills = Array[String](["", "", ""])
+core_skill_id = ""
+trigger_area = NodePath("")
 
 [node name="InteractionArea" parent="." index="1" unique_id=17577018 node_paths=PackedStringArray("player")]
 script = ExtResource("3_1murt")
@@ -336,12 +348,3 @@ pixel_size = 0.01
 billboard = 2
 alpha_cut = 1
 text = "Player"
-
-[node name="PlayerTriggerArea" type="Area3D" parent="." index="6" unique_id=1700682610]
-collision_layer = 0
-collision_mask = 8
-input_ray_pickable = false
-script = ExtResource("8_5sj0x")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerTriggerArea" index="0" unique_id=517072846]
-shape = SubResource("SphereShape3D_gkrjc")

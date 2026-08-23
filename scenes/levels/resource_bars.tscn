@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dct4h2ajqj03p"]
+
+[ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="1_elvi8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ylx48"]
+shading_mode = 0
+albedo_color = Color(0.43137255, 0, 0, 1)
+disable_receive_shadows = true
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_5qbgb"]
+material = SubResource("StandardMaterial3D_ylx48")
+size = Vector2(1, 0.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_elvi8"]
+render_priority = 0
+shader = ExtResource("1_elvi8")
+shader_parameter/fill_amount = 1.0
+shader_parameter/bar_color = Color(0.08812735, 0.60202754, 0.99999994, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebyv3"]
+shading_mode = 0
+albedo_color = Color(1.4920532e-06, 0.4378463, 0.5940653, 1)
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_gkrjc"]
+material = SubResource("StandardMaterial3D_ebyv3")
+size = Vector2(1, 0.1)
+center_offset = Vector3(0, 0, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mmct"]
+shading_mode = 0
+albedo_color = Color(0.40846708, 0.21896285, 0, 1)
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_ylx48"]
+material = SubResource("StandardMaterial3D_2mmct")
+size = Vector2(0.75, 0.1)
+center_offset = Vector3(-0.125, -0.12, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mc0o1"]
+render_priority = 0
+shader = ExtResource("1_elvi8")
+shader_parameter/fill_amount = 0.0
+shader_parameter/bar_color = Color(1, 0.67058825, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_04okd"]
+shading_mode = 0
+albedo_color = Color(1, 0.6392157, 0, 1)
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_2mmct"]
+material = SubResource("StandardMaterial3D_04okd")
+size = Vector2(0.75, 0.1)
+center_offset = Vector3(-0.125, -0.12, 0.01)
+
+[node name="ResourceBars" type="Node3D" unique_id=2084622745]
+
+[node name="HPBarBG" type="MeshInstance3D" parent="." unique_id=1374022975]
+mesh = SubResource("QuadMesh_5qbgb")
+
+[node name="HPBarFG" type="MeshInstance3D" parent="." unique_id=546679492]
+material_override = SubResource("ShaderMaterial_elvi8")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_gkrjc")
+
+[node name="SPBarBG" type="MeshInstance3D" parent="." unique_id=1059477668]
+mesh = SubResource("QuadMesh_ylx48")
+
+[node name="SPBarFG" type="MeshInstance3D" parent="." unique_id=729302711]
+material_override = SubResource("ShaderMaterial_mc0o1")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_2mmct")

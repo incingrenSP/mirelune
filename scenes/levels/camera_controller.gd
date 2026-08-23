@@ -5,10 +5,10 @@ extends Node3D
 
 # dialog portion
 @export var dialog_zoom_speed := 3.0
-@export var dialog_distance := 8.0
+@export var dialog_distance := 6.0
 
 # player portion
-@export var default_distance := 12.0
+@export var default_distance := 8.0
 @export var follow_speed := 5.0
 @export var rotation_speed := 90.0
 

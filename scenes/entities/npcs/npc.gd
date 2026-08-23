@@ -20,7 +20,6 @@ var waiting := false
 var routine_direction := 1
 
 func _ready():
-	DialogManager.dialog_target_changed.connect(_on_dialog_target_changed)
 	if routine_enabled:
 		move_target = routine_point_b.global_position
 		
@@ -130,4 +129,4 @@ func show_name(visible_state: bool = false):
 	popup for npc name
 	'''
 	$WorldUI/Label3D.text = "NPC"
-	$WorldUI/Label3D.visible = visible_state or GameStateManager.is_dialog_active()
+	$WorldUI/Label3D.visible = visible_state

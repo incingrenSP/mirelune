@@ -28,6 +28,7 @@ func set_hovered(value: bool):
 	if enemy:
 		print("Enemy detected!")
 		enemy.is_hovered = value
+		enemy.resource_bar_visibility()
 	
 func _on_input_event(
 	camera, event, position, normal, shape_idx

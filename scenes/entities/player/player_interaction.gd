@@ -28,8 +28,11 @@ func _on_input_event(
 ):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			print(">>>> PLAYER CLICKED")
-			player.request_pause()
+			if not GameStateManager.is_dialog_active():
+				print(">>>> PLAYER CLICKED")
+				player.request_pause()
+			
+			player.show_skill_wheel()
 				
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://j5cpbs2nxee5" path="res://scenes/entities/player/player.tscn" id="2_j4d2a"]
 [ext_resource type="PackedScene" uid="uid://bkg1ifocfhv8h" path="res://scenes/levels/camera_controller.tscn" id="5_b6bv0"]
 [ext_resource type="PackedScene" uid="uid://b3mfu23tmy3sg" path="res://scenes/entities/npcs/npc.tscn" id="5_u81e1"]
+[ext_resource type="PackedScene" uid="uid://ilp4xcuko1st" path="res://scenes/entities/enemies/enemy.tscn" id="9_7lrji"]
 
 [node name="Main" type="Node3D" unique_id=1706958914]
 script = ExtResource("1_j4d2a")
@@ -20,8 +21,6 @@ shadow_enabled = true
 [node name="Player" parent="." unique_id=1313099410 node_paths=PackedStringArray("camera") instance=ExtResource("2_j4d2a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, 6.537318)
 camera = NodePath("../CameraController")
-sp = 0.0
-max_sp = 100.0
 
 [node name="NPC" parent="." unique_id=21563850 node_paths=PackedStringArray("routine_point_a", "routine_point_b") instance=ExtResource("5_u81e1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.995529, 3.5000005, 0)
@@ -37,3 +36,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.624213, 2.5, 8.61494)
 
 [node name="PointB" type="Marker3D" parent="Routine" unique_id=1105459541]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0996246, 2.4999995, -1.3202553)
+
+[node name="Enemy" parent="." unique_id=69316488 instance=ExtResource("9_7lrji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.802612, 4.1153584, 2.6803284)
+
+[node name="Enemy2" parent="." unique_id=1452680270 instance=ExtResource("9_7lrji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.968628, 4.308962, -33.50528)
