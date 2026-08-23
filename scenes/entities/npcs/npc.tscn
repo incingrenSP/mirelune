@@ -242,6 +242,8 @@ wait_time = 10.0
 detection_radius = 10.0
 
 [node name="InteractionArea" parent="." index="1" unique_id=17577018 node_paths=PackedStringArray("npc") groups=["clickable", "npc"]]
+collision_layer = 8
+collision_mask = 0
 script = ExtResource("3_0fe8l")
 npc = NodePath("..")
 

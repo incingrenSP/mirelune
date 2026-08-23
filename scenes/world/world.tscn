@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bc6aa4ubg2tsh"]
+
+[node name="World" type="Node3D" unique_id=894900150]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1138954507]
+size = Vector3(100, 0.5, 100)

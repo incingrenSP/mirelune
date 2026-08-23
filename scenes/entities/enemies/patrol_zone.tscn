@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dumrbnmluw6se"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_5qbgb"]
+radius = 20.0
+
+[node name="PatrolZone" type="Area3D" unique_id=1531947245]
+
+[node name="Range" type="CollisionShape3D" parent="." unique_id=569542662]
+shape = SubResource("SphereShape3D_5qbgb")

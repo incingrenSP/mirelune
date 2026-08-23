@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://5kfsgk18od45"]
+
+[ext_resource type="Script" uid="uid://2axhymk5y5i7" path="res://scenes/user_interface/game_ui.gd" id="1_kvy1d"]
+[ext_resource type="PackedScene" uid="uid://bebyccl5dut7w" path="res://scenes/user_interface/pause/pause_menu.tscn" id="1_r2g75"]
+[ext_resource type="PackedScene" uid="uid://cxna2fwsmua5r" path="res://scenes/user_interface/dialogs/dialog_ui.tscn" id="3_kvy1d"]
+[ext_resource type="PackedScene" uid="uid://csl2lwjgx0m57" path="res://scenes/user_interface/skill_wheel/combat_skill_overlay.tscn" id="4_pm2ti"]
+
+[node name="GameUI" type="CanvasLayer" unique_id=1136530938]
+layer = 10
+script = ExtResource("1_kvy1d")
+
+[node name="PauseMenu" parent="." unique_id=1213401232 instance=ExtResource("1_r2g75")]
+
+[node name="DialogUI" parent="." unique_id=792792669 node_paths=PackedStringArray("pause_menu") instance=ExtResource("3_kvy1d")]
+pause_menu = NodePath("../PauseMenu")
+
+[node name="CombatSkillOverlay" parent="." unique_id=210546284 instance=ExtResource("4_pm2ti")]

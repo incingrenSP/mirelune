@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://c7i8oq2hwkfoh"]
+
+[ext_resource type="Script" uid="uid://jykaton2a86t" path="res://scenes/user_interface/skill_wheel/skill_entry.gd" id="1_cckhb"]
+
+[node name="SkillEntry" type="PanelContainer" unique_id=1689039885]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cckhb")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=532966529]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=758747075]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=660105191]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillNameLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=95097837]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SkillName"
+
+[node name="CostLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=81563966]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SP:"
+
+[node name="DamageLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=142339313]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DMG:"
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=106338541]
+layout_mode = 2
+size_flags_vertical = 3
+text = "SkillDescription"

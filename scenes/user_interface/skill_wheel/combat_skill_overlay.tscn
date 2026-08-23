@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://csl2lwjgx0m57"]
+
+[ext_resource type="PackedScene" uid="uid://be1c04gjmmufq" path="res://scenes/user_interface/skill_wheel/skill_wheel.tscn" id="1_nebyp"]
+[ext_resource type="Script" uid="uid://cc5bn0ggbtk62" path="res://scenes/user_interface/skill_wheel/combat_skill_overlay.gd" id="1_yosb1"]
+
+[node name="CombatSkillOverlay" type="Control" unique_id=210546284]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yosb1")
+
+[node name="SkillWheel" parent="." unique_id=1412294241 instance=ExtResource("1_nebyp")]
+layout_mode = 1

@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://jpkh2175b3m8"]
+
+[ext_resource type="Script" uid="uid://b7l8jeyd3u7ol" path="res://scenes/user_interface/skill_wheel/skills_viewer.gd" id="1_nvsbf"]
+[ext_resource type="PackedScene" uid="uid://be1c04gjmmufq" path="res://scenes/user_interface/skill_wheel/skill_wheel.tscn" id="1_trt7l"]
+[ext_resource type="Script" uid="uid://baknp1mvbqmne" path="res://scenes/user_interface/skill_wheel/skill_inventory.gd" id="3_60o26"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_60o26"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.94458723, 5.631298e-06, 9.62615e-07, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c46qy"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9728325, 5.823821e-06, 1.540184e-06, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+
+[node name="SkillsViewer" type="Control" unique_id=167947701]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nvsbf")
+
+[node name="SkillWheelContainer" type="CenterContainer" parent="." unique_id=1311400939]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 95.0
+offset_right = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkillWheel" parent="SkillWheelContainer" unique_id=1412294241 instance=ExtResource("1_trt7l")]
+layout_mode = 2
+
+[node name="SkillInventory" type="Panel" parent="." unique_id=1654852645 node_paths=PackedStringArray("skill_menu_label")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_60o26")
+skill_menu_label = NodePath("../SkillMenuLabel")
+
+[node name="CloseButton" type="Button" parent="SkillInventory" unique_id=158164043]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 52.0
+grow_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_60o26")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_c46qy")
+text = "X"
+
+[node name="InventoryContainer" type="Control" parent="SkillInventory" unique_id=1187402801]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -600.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SkillInventory/InventoryContainer" unique_id=1605931650]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SkillInventory/InventoryContainer/ScrollContainer" unique_id=1169204686]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SkillMenuLabel" type="Label" parent="." unique_id=1742333189]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 97.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+text = "SKILLS"

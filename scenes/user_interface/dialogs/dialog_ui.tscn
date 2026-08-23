@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://cxna2fwsmua5r"]
+
+[ext_resource type="Script" uid="uid://bw2ixpqvai58t" path="res://scenes/user_interface/dialogs/dialog_ui.gd" id="1_r5ivn"]
+[ext_resource type="Script" uid="uid://bfblf11jwl51i" path="res://scenes/user_interface/dialogs/dialog_text.gd" id="2_7pqqo"]
+[ext_resource type="PackedScene" uid="uid://c604vdroqnwn3" path="res://scenes/user_interface/dialogs/dialog_log.tscn" id="3_g5cg7"]
+[ext_resource type="Theme" uid="uid://bk7sa6wb70008" path="res://themes/menu_theme.tres" id="4_3p7fb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wrdyu"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 5
+
+[node name="DialogUI" type="Control" unique_id=792792669]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_r5ivn")
+
+[node name="DialogBox" type="VBoxContainer" parent="." unique_id=2027483370]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -250.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BoxPanel" type="Panel" parent="DialogBox" unique_id=1551768007]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_wrdyu")
+
+[node name="SpeakerLabel" type="Label" parent="DialogBox/BoxPanel" unique_id=277978624]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 52.0
+grow_horizontal = 2
+
+[node name="TextLabel" type="RichTextLabel" parent="DialogBox/BoxPanel" unique_id=1960074335]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 72.0
+offset_right = 1260.0
+offset_bottom = 230.0
+script = ExtResource("2_7pqqo")
+
+[node name="DialogLog" parent="." unique_id=111520610 instance=ExtResource("3_g5cg7")]
+visible = false
+z_index = 1
+layout_mode = 1
+
+[node name="Controls" type="HBoxContainer" parent="." unique_id=1398226413]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 68.0
+grow_horizontal = 2
+
+[node name="Pause" type="Button" parent="Controls" unique_id=1341130268]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme = ExtResource("4_3p7fb")
+theme_override_font_sizes/font_size = 24
+text = "PAUSE
+"
+
+[node name="Log" type="Button" parent="Controls" unique_id=187330782]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("4_3p7fb")
+text = "LOG"
+
+[node name="Auto" type="Button" parent="Controls" unique_id=1395095731]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("4_3p7fb")
+text = "AUTO"

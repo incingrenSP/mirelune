@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://j5cpbs2nxee5" path="res://scenes/entities/player/player.tscn" id="2_j4d2a"]
 [ext_resource type="PackedScene" uid="uid://bkg1ifocfhv8h" path="res://scenes/levels/camera_controller.tscn" id="5_b6bv0"]
 [ext_resource type="PackedScene" uid="uid://b3mfu23tmy3sg" path="res://scenes/entities/npcs/npc.tscn" id="5_u81e1"]
+[ext_resource type="PackedScene" uid="uid://5kfsgk18od45" path="res://scenes/user_interface/game_ui.tscn" id="7_vkq25"]
 [ext_resource type="PackedScene" uid="uid://ilp4xcuko1st" path="res://scenes/entities/enemies/enemy.tscn" id="9_7lrji"]
 
 [node name="Main" type="Node3D" unique_id=1706958914]
@@ -42,3 +43,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.802612, 4.1153584, 2.6803
 
 [node name="Enemy2" parent="." unique_id=1452680270 instance=ExtResource("9_7lrji")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.968628, 4.308962, -33.50528)
+
+[node name="GameUI" parent="." unique_id=1136530938 node_paths=PackedStringArray("player") instance=ExtResource("7_vkq25")]
+player = NodePath("../Player")
