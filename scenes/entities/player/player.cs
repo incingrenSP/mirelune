@@ -149,6 +149,11 @@ public partial class Player : Entity
             }
         }
 
+        if (_interactTimer > 0.0f)
+        {
+            _interactTimer -= (float)delta;
+        }
+
         _resourceBarTransition();
     }
     
@@ -161,8 +166,6 @@ public partial class Player : Entity
     {
         GD.Print("====================================");
         GD.Print("PLAYER TRY TO INTERACT");
-
-
     }
 
     public void UpdateSprite(Vector2 inputDir)
@@ -194,6 +197,11 @@ public partial class Player : Entity
         {
             _sprite.Play("idle");
         }
+    }
+
+    private void OnDialogFinished()
+    {
+        _interactTimer = InteractTimeout;
     }
     
     private void ResourceBarTransition(double delta)

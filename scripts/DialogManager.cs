@@ -51,7 +51,7 @@ public partial class DialogManager : Node
         }
     }
 
-    private void RegisterCamera(CameraController cam)
+    public void RegisterCamera(CameraController cam)
     {
         if (_camera != null && _camera != cam)
         {
