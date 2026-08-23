@@ -35,7 +35,7 @@ public partial class InteractionArea : Area3D
         int shapeIdx
         )
     {
-        if (inputEvent is InputEventMouseButton mouseButton)
+        if (inputEvent is InputEventMouseButton mouseButton && mouseButton.Pressed)
         {
             pass;
         }
