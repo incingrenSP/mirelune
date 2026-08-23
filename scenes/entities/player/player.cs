@@ -1,7 +1,12 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class Player : Entity
 {
+    [Signal]
+    public delegate void SkillsChanged();
+
+    // PLAYER CONSTANTS
     private const float WalkSpeed =  4.0f;
     private const float RunSpeed = 10.0f;
     private const float Gravity = 18.0f;
@@ -14,7 +19,7 @@ public partial class Player : Entity
     [Export]
     private Node2D _pauseMenu;
     [Export]
-    private Area3D _playerTriggerArea;
+    private PlayerTriggerArea _triggerArea;
     [Export]
     private Node3D _camera;
     private Node3D _worldUI;
@@ -25,20 +30,48 @@ public partial class Player : Entity
     private bool _inputLocked = false;
     private bool _inCombat = false;
 
+
+    // PLAYER STATS
     [Export]
     public string PlayerName { get; set; } = "Player";
     [Export]
     public int PlayerLevel { get; set; } = 1;
-
+    [Export]
+    public int Xp { get; set; } = 0.0f;
+    [Export]
+    public int MaxXp { get ; set; } = 100.0f;
     [Export]
     public float Sp { get; set; } = 0.0f;
     [Export]
     public float MaxSp { get; set; } = 100.0f;
-
+    [Export]
+    public int Atk { get; set; } = 10;
+    [Export]
+    public int Def { get; set; } = 10;
+    [Export]
+    public int Spd { get; set; } = (int)WalkSpeed;
     [Export]
     public float HpRegenRate { get; set; } = 0.0f;
     [Export]
     public float SpRegenRate { get; set; } = 5.0f;
+
+
+    // PLAYER SKILL INFO
+    private const int MaxActiveSlots = 3;
+    private const int MaxPassiveSlots = 3;
+
+    [Export]
+    public int UnlockedActiveSlots { get; set; } = 3;
+    [Export]
+    public int UnlockedPassiveSlots { get; set; } = 3;
+    [Export]
+    public List<string> EquippedActiveSkills = new();
+    [Export]
+    public List<string> EquippedPassiveSkills = new();
+    [Export]
+    public string CoreSkillId = "";
+
+    public List<string> PlayerUnlockedSkills = new();
 
 
     public override void _Ready()
@@ -157,7 +190,7 @@ public partial class Player : Entity
         _resourceBarTransition();
     }
     
-    public override void _InputEvent(InputEvent @event)
+    public override void _InputEvent(InputEvent inputEvent)
     {
         return;
     }
@@ -166,6 +199,31 @@ public partial class Player : Entity
     {
         GD.Print("====================================");
         GD.Print("PLAYER TRY TO INTERACT");
+
+        if (_interactTimer > 0.0f)
+        {
+            GD.Print(">>>>> PLAYER INTERACT ON TIMEOUT");
+            return;
+        }
+
+        if (target == null)
+        {
+            return;
+        }
+
+        if (GameStateManager.Instance.IsDialogActive())
+        {
+            return;
+        }
+
+        if (_triggerArea._nearbyInteractable.Contains(target))
+        {
+            GD.Print(">>>>> TARGET IS NOT IN PLAYER RANGE");
+            return;
+        }
+
+        GD.Print(">>>>> TARGET IS IN PLAYER RANGE");
+        target.Interact();
     }
 
     public void UpdateSprite(Vector2 inputDir)
@@ -225,11 +283,22 @@ public partial class Player : Entity
         UpdateSPBar();
     }
 
+    public int TakeDamage(int damage)
+    {
+        Hp = min(Hp - damage, MaxHp);
+        return Hp;
+    }
+
     public void SetCombatState(bool value)
     {
         _inCombat = value;
 
         ResourceBarVisibility();
+    }
+
+    public void SetHoverState(bool value)
+    {
+        _isHovered = value;
     }
 
     private void ResourceBarVisibility()
@@ -259,4 +328,70 @@ public partial class Player : Entity
         return;
     }
 
+    public bool IsSlotUnlocked(string slotType, int slotIndex)
+    {
+        switch (slotType)
+        {
+            case "active":
+                return slotIndex < UnlockedActiveSlots;
+
+            case "passive":
+                return slotIndex < UnlockedPassiveSlots;
+
+            default:
+                return false;
+        }
+    }
+
+    public void EquipSkill(int slotIndex, string slotType, string skillId)
+    {
+        if (!IsSlotUnlocked(slotType, slotIndex))
+        {
+            return;
+        }
+
+        List<string> targetArray = (slotType == "active") ? EquippedActiveSkills : EquippedPassiveSkills;
+        int existingIndex = targetArray.IndexOf(skillId);
+
+        if (existingIndex != -1 && existingIndex != slotIndex)
+        {
+            targetArray[existingIndex] = "";
+        }
+
+        targetArray[slotIndex] = skillId;
+        EmitSignal(SignalName.SkillsChanged);
+    }
+
+    public void EquipCoreSkill(string skillId)
+    {
+        CoreSkillId = skillId;
+        EmitSignal(SignalName.SkillsChanged);
+    }
+
+    public void UseSkill(string skillId)
+    {
+        SkillData data = SkillDatabase.Instance.GetSkill(skillId);
+        if (data == null)
+        {
+            return;
+        }
+
+        if (Sp < data.SpCost)
+        {
+            return;
+        }
+
+        Sp -= data.SpCost;
+    }
+
+    public void ShowSkillWheel()
+    {
+        if (!_inCombat)
+        {
+            return;
+        }
+    }
+
 }
+
+
