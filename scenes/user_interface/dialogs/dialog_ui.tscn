@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cxna2fwsmua5r"]
 
-[ext_resource type="Script" uid="uid://bw2ixpqvai58t" path="res://scenes/user_interface/dialogs/dialog_ui.gd" id="1_r5ivn"]
-[ext_resource type="Script" uid="uid://bfblf11jwl51i" path="res://scenes/user_interface/dialogs/dialog_text.gd" id="2_7pqqo"]
+[ext_resource type="Script" uid="uid://cgpq0tni8idut" path="res://scenes/user_interface/dialogs/DialogUi.cs" id="1_3p7fb"]
+[ext_resource type="Script" uid="uid://bjod7sm56hpfi" path="res://scenes/user_interface/dialogs/DialogText.cs" id="2_3dwgf"]
 [ext_resource type="PackedScene" uid="uid://c604vdroqnwn3" path="res://scenes/user_interface/dialogs/dialog_log.tscn" id="3_g5cg7"]
 [ext_resource type="Theme" uid="uid://bk7sa6wb70008" path="res://themes/menu_theme.tres" id="4_3p7fb"]
 
@@ -25,7 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_r5ivn")
+script = ExtResource("1_3p7fb")
 
 [node name="DialogBox" type="VBoxContainer" parent="." unique_id=2027483370]
 layout_mode = 1
@@ -58,7 +58,7 @@ offset_left = 20.0
 offset_top = 72.0
 offset_right = 1260.0
 offset_bottom = 230.0
-script = ExtResource("2_7pqqo")
+script = ExtResource("2_3dwgf")
 
 [node name="DialogLog" parent="." unique_id=111520610 instance=ExtResource("3_g5cg7")]
 visible = false
