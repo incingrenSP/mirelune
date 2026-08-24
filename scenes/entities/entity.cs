@@ -3,9 +3,9 @@ using Godot;
 public partial class Entity : CharacterBody3D
 {
 	[Export]
-	public float MaxHp { get; set; } = 100.0f;
+	protected float MaxHp { get; set; } = 100.0f;
 	
-	private float _hp;
+	protected float _hp;
 	
 	public float Hp
 	{
@@ -13,14 +13,14 @@ public partial class Entity : CharacterBody3D
 		set => _hp = Mathf.Clamp(value, 0.0f, MaxHp);
 	}
 
-	private float _displayedHpPct = 1.0f;
-	private float _displayedSpPct = 1.0f;
+	protected float _displayedHpPct = 1.0f;
+	protected float _displayedSpPct = 1.0f;
 
 	[Export]
-	private float _barSmoothSpeed = 2.5f;
+	protected float _barSmoothSpeed = 2.5f;
 
 	[Export]
-	private Marker3D FocusPoint;
+	protected Marker3D FocusPoint;
 
 	public override _Ready()
 	{

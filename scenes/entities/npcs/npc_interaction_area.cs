@@ -31,7 +31,7 @@ public partial class Interactable : InteractionArea
         SetHovered(false);
     }
 
-    public void SetHovered(bool value)
+    protected void SetHovered(bool value)
     {
         _hovered = value;
 
@@ -46,7 +46,7 @@ public partial class Interactable : InteractionArea
         }
     }
 
-    public override void OnInputEvent(
+    protected void OnInputEvent(
         CameraController camera,
         InputEvent inputEvent,
         Vector3 position,

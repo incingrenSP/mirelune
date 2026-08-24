@@ -550,7 +550,7 @@ public partial class Enemy : Entity
 
     private void ResourceBarVisibility(string text = "Enemy")
     {
-        _resourceBars.Visible = (_inCombat || _isHovered;)
+        _resourceBars.Visible = (_inCombat || _isHovered);
     }
 
     private void UpdateHPBar()
@@ -567,6 +567,12 @@ public partial class Enemy : Entity
             "fill_amount",
             _displayedSpPct
         );
+    }
+
+    public int TakeDamage(int damage)
+    {
+        Hp = min(Hp - damage, MaxHp);
+        return Hp;
     }
 
 }

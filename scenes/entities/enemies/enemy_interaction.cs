@@ -1,12 +1,14 @@
 using Godot;
 
-public partial class PlayerInteractionArea : InteractionArea
+public partial class EnemyInteractionArea : InteractionArea
 {
     [Export]
-    public Player player { get; private set; }
+    private Enemy enemy { get; set; }
+
     public override void _Ready()
     {
         base._Ready();
+
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
         InputEvent += OnInputEvent;
@@ -24,12 +26,18 @@ public partial class PlayerInteractionArea : InteractionArea
 
     private void SetHovered(bool value)
     {
+        if (GameStateManager.Instance.IsDialogActive())
+        {
+            return;
+        }
+
         _hovered = value;
 
-        if (player != null)
+        if (enemy != null)
         {
-            player.SetHoverState(value);
-            player.ResourceBarVisibility();
+            GD.Print("Enemy Detected!");
+            enemy._isHovered = value;
+            enemy.ResourceBarVisibility();
         }
     }
 
@@ -41,20 +49,12 @@ public partial class PlayerInteractionArea : InteractionArea
         int shapeIdx
     )
     {
-        if (inputEvent is InputEventMouseButton mouseButton && mouseButton.Pressed)
+        if (inputEvent is InputMouseButton mouseButton && mouseButton.Pressed)
         {
             if (mouseButton.ButtonIndex == mouseButton.Left)
             {
-                if (!GameStateManager.IsDialogActive())
-                {
-                    GD.Print(">>>> PLAYER CLICKED");
-                    player.RequestPause();
-                }
-            }
-            else if(mouseButton.ButtonIndex == mouseButton.Right)
-            {
-                GD.Print("10 damage taken");
-                GD.Print($"Player currently has: {player.TakeDamage(10)}");
+                GD.Print("Enemy took 10 damage");
+                GD.Print($"Enemy currently has: {enemy.TakeDamage(10)}");
             }
         }
     }
