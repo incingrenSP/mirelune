@@ -4,6 +4,9 @@ extends Node
 @export var targeting: SkillTargetingController
 @export var camera: Camera3D
 
+func _ready() -> void:
+	camera = get_viewport().get_camera_3d()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if targeting == null or not targeting.is_aiming():
 		return

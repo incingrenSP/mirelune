@@ -10,7 +10,7 @@ var facing_right := true
 var interact_timer := 0.0
 
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
-@onready var player_targeting: Node = $PlayerSkillInput
+@onready var player_skill_input: Node = $PlayerSkillInput
 @onready var skill_targeting: SkillTargetingController = $SkillTargetingController
 
 @export var pause_menu: PauseMenu
@@ -43,7 +43,6 @@ func _ready():
 	var cam = get_tree().get_first_node_in_group("camera")
 	if cam:
 		cam.set_default_target(focus_point)
-		player_targeting.camera = cam
 		
 	DialogManager.dialog_finished.connect(_on_dialog_finished)
 	

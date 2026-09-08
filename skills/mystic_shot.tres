@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dst28oum58hbf" path="res://scripts/SkillData.gd" id="1_3goo7"]
 [ext_resource type="Texture2D" uid="uid://dkr558f25dgxw" path="res://graphics/ui/skill_icon_temp/keyboard_0.png" id="1_5ou0n"]
+[ext_resource type="Script" uid="uid://cot8277r08toc" path="res://scenes/entities/skills_behavior/status_application.gd" id="1_vpplm"]
+[ext_resource type="Resource" uid="uid://cl7kod2lfg1q1" path="res://scenes/entities/skills_behavior/SkillShot/skillshot_behavior.tres" id="2_fnkb2"]
+[ext_resource type="Script" uid="uid://brcm8brjbsm8h" path="res://scenes/entities/skills_behavior/stat_modifier_entry.gd" id="4_fnkb2"]
 
 [resource]
 script = ExtResource("1_3goo7")
@@ -10,6 +13,8 @@ display_name = "Mystic Shot"
 description = "Fire a damaging bolt of energy."
 icon = ExtResource("1_5ou0n")
 sp_cost = 20
-damage_scaling = "ATK"
 damage_formula = "atk"
+range_value = 5.0
+cast_time = 3.0
+behavior = ExtResource("2_fnkb2")
 metadata/_custom_type_script = "uid://dst28oum58hbf"
