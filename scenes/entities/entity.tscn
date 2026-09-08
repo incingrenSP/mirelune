@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bmp8gjrd5v8e5" path="res://scenes/entities/entity.gd" id="1_wcjeu"]
 [ext_resource type="Script" uid="uid://b7n6u5b50brhg" path="res://scenes/entities/interaction_area.gd" id="2_o12gi"]
+[ext_resource type="PackedScene" uid="uid://scn1nccsiawq" path="res://scenes/entities/skills_behavior/SkillTargetController/SkillTargetingController.tscn" id="3_7agfi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ylx48"]
 size = Vector3(1, 1.5, 0.2)
@@ -45,3 +46,5 @@ shape = SubResource("BoxShape3D_04okd")
 [node name="CameraFocusPoint" type="Marker3D" parent="." unique_id=256087317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49209273, 0)
 visible = false
+
+[node name="SkillTargetingController" parent="." unique_id=60548542 instance=ExtResource("3_7agfi")]

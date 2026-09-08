@@ -33,6 +33,7 @@ enum SkillFlag {
 @export var damage_formula: String = ""
 @export var attack_type: AttackType = AttackType.SKILLSHOT
 @export var range_value: float = 2.0
+@export var cast_speed: float = 1.0
 @export var behavior: SkillBehaviorData = null
 @export var applied_statuses: Array[StatusApplication] = []
 
