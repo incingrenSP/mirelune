@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b38u586cienfc"]
 
-[ext_resource type="Script" uid="uid://bvtniru4653lk" path="res://scenes/entities/player/StatsPanel.cs" id="1_d28uf"]
+[ext_resource type="Script" uid="uid://x72t824xw1rm" path="res://scenes/entities/player/stats_panel.gd" id="1_d28uf"]
+[ext_resource type="Theme" uid="uid://hem02ukrgpc0" path="res://themes/menu_resource_bar.tres" id="2_lpe7m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpe7m"]
 bg_color = Color(0.43137255, 0, 0, 1)
@@ -55,6 +56,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
 script = ExtResource("1_d28uf")
 
 [node name="Title" type="Label" parent="." unique_id=2105045601]
@@ -90,6 +93,7 @@ text = "Lvl. XX"
 [node name="XPBar" type="ProgressBar" parent="PlayerInfo" unique_id=1298010931]
 layout_mode = 2
 size_flags_vertical = 2
+theme = ExtResource("2_lpe7m")
 
 [node name="ResourceBars" type="VBoxContainer" parent="." unique_id=1092216221]
 layout_mode = 0
@@ -112,6 +116,7 @@ custom_minimum_size = Vector2(400, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme = ExtResource("2_lpe7m")
 theme_override_styles/background = SubResource("StyleBoxFlat_lpe7m")
 theme_override_styles/fill = SubResource("StyleBoxFlat_7ejd3")
 show_percentage = false
@@ -145,6 +150,7 @@ custom_minimum_size = Vector2(400, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme = ExtResource("2_lpe7m")
 theme_override_styles/background = SubResource("StyleBoxFlat_4vbai")
 theme_override_styles/fill = SubResource("StyleBoxFlat_vh34r")
 show_percentage = false

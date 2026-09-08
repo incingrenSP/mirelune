@@ -1,12 +1,83 @@
-[gd_scene format=3 uid="uid://be1c04gjmmufq"]
+[gd_scene format=3 uid="uid://c186ekh0s63fv"]
 
-[ext_resource type="Script" uid="uid://bu6u1fuy8f42f" path="res://scenes/user_interface/skill_wheel/skill_wheel.gd" id="1_dtb12"]
+[ext_resource type="Script" uid="uid://cdqfvqphvcrh5" path="res://scenes/user_interface/skill_wheel/skill_wheel.gd" id="1_60wlb"]
+[ext_resource type="PackedScene" uid="uid://cclrfpetekp1a" path="res://scenes/user_interface/skill_wheel/skill_wheel_slot.tscn" id="2_6y52u"]
+[ext_resource type="Script" uid="uid://b42qftyyi16ks" path="res://scenes/user_interface/skill_wheel/interaction_layer.gd" id="2_niwrw"]
+[ext_resource type="PackedScene" uid="uid://bngf7y7h2sx41" path="res://scenes/user_interface/skill_wheel/skill_wheel_core.tscn" id="3_niwrw"]
+[ext_resource type="Script" uid="uid://bdn62j3q3k3tw" path="res://scenes/user_interface/skill_wheel/cooldown_overlay.gd" id="5_spte3"]
 
-[node name="SkillWheel" type="Control" unique_id=1412294241]
+[node name="SkillWheel" type="Control" unique_id=175051483]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_dtb12")
+mouse_filter = 1
+script = ExtResource("1_60wlb")
+
+[node name="Wedges" type="Control" parent="." unique_id=1311656713]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Active0" parent="Wedges" unique_id=1644325063 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Passive0" parent="Wedges" unique_id=1392909324 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Active1" parent="Wedges" unique_id=803940485 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Passive1" parent="Wedges" unique_id=83682324 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Active2" parent="Wedges" unique_id=1805209717 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Passive2" parent="Wedges" unique_id=1948837103 instance=ExtResource("2_6y52u")]
+layout_mode = 1
+
+[node name="Core" parent="." unique_id=1187638818 instance=ExtResource("3_niwrw")]
+layout_mode = 1
+
+[node name="InteractionLayer" type="Control" parent="." unique_id=1824783744]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+script = ExtResource("2_niwrw")
+
+[node name="CooldownOverlay" type="Control" parent="." unique_id=1404316675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_spte3")
+
+[node name="CooldownLabel" type="Label" parent="." unique_id=1658034241]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -9.0
+offset_right = 20.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.30614036, 0.41783905, 0.46905255, 1)
+theme_override_font_sizes/font_size = 48

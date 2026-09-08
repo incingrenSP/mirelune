@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bngf7y7h2sx41"]
+
+[ext_resource type="Script" uid="uid://5c87kswiugxr" path="res://scenes/user_interface/skill_wheel/skill_wheel_core.gd" id="1_4epfy"]
+
+[node name="SkillWheelCore" type="Control" unique_id=1187638818]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_4epfy")
+
+[node name="CooldownLabel" type="Label" parent="." unique_id=1827694969]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 18.0
+
+[node name="Visual" type="Control" parent="." unique_id=979587632]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkillIcon" type="TextureRect" parent="Visual" unique_id=1232586792]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

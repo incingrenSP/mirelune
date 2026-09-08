@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://dtldoj1wgw4xo"]
+
+[ext_resource type="Script" uid="uid://bl244iy0gmcff" path="res://scenes/user_interface/skill_wheel/player_stats_panel.gd" id="1_353g7"]
+
+[node name="PlayerStatsPanel" type="Control" unique_id=1767838014]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_353g7")
+
+[node name="MinorStats" type="VBoxContainer" parent="." unique_id=1331981175]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_right = -5.0
+grow_vertical = 2
+
+[node name="ATKPanel" type="Panel" parent="MinorStats" unique_id=1275759569]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ATKValue" type="Label" parent="MinorStats/ATKPanel" unique_id=1544866661]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"
+
+[node name="DEFPanel" type="Panel" parent="MinorStats" unique_id=1641300178]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DEFValue" type="Label" parent="MinorStats/DEFPanel" unique_id=1092767367]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"
+
+[node name="ADRPanel" type="Panel" parent="MinorStats" unique_id=1393059294]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ADRValue" type="Label" parent="MinorStats/ADRPanel" unique_id=2078369807]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"
+
+[node name="MajorStats" type="VBoxContainer" parent="." unique_id=1344381925]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="HPRate" type="Panel" parent="MajorStats" unique_id=703036196]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HPRateValue" type="Label" parent="MajorStats/HPRate" unique_id=1841905692]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"
+
+[node name="SPRate" type="Panel" parent="MajorStats" unique_id=1812548341]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SPRateValue" type="Label" parent="MajorStats/SPRate" unique_id=763442153]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"
+
+[node name="SPDPanel" type="Panel" parent="MajorStats" unique_id=492184377]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SPDValue" type="Label" parent="MajorStats/SPDPanel" unique_id=353142566]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -9.0
+offset_right = 0.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "STAT NAME: XX"

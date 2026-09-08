@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PlayerSkillInfo" format=3 uid="uid://b0e70yk1frlle"]
+
+[ext_resource type="Script" uid="uid://ct4rum4gw41oo" path="res://scenes/entities/player/player_skill_info.gd" id="1_pfv2d"]
+
+[resource]
+script = ExtResource("1_pfv2d")

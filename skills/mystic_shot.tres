@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://dr4dijgljtj2l"]
+
+[ext_resource type="Script" uid="uid://dst28oum58hbf" path="res://scripts/SkillData.gd" id="1_3goo7"]
+[ext_resource type="Texture2D" uid="uid://dkr558f25dgxw" path="res://graphics/ui/skill_icon_temp/keyboard_0.png" id="1_5ou0n"]
+
+[resource]
+script = ExtResource("1_3goo7")
+id = "0"
+display_name = "Mystic Shot"
+description = "Fire a damaging bolt of energy."
+icon = ExtResource("1_5ou0n")
+sp_cost = 20
+damage_scaling = "ATK"
+damage_formula = "atk"
+metadata/_custom_type_script = "uid://dst28oum58hbf"

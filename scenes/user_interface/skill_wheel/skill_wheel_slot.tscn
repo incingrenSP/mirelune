@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cclrfpetekp1a"]
+
+[ext_resource type="Script" uid="uid://dv0wust13swbr" path="res://scenes/user_interface/skill_wheel/skill_wheel_slot.gd" id="1_w75mq"]
+
+[node name="SkillWheelSlot" type="Control" unique_id=1644325063]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_w75mq")
+
+[node name="CooldownLabel" type="Label" parent="." unique_id=1144128627]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 600.0
+offset_top = 331.0
+offset_right = 640.0
+offset_bottom = 349.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkillIcon" type="TextureRect" parent="." unique_id=352701895]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2

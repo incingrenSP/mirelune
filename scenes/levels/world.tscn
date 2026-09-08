@@ -2,13 +2,21 @@
 
 [ext_resource type="Texture2D" uid="uid://dyq3x03i1h3gr" path="res://graphics/textures/normal/brick_normal.png" id="1_tsias"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_siy6i"]
+albedo_color = Color(0, 0, 0, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_5qbgb"]
+material = SubResource("StandardMaterial3D_siy6i")
 size = Vector3(150, 5, 150)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_lfyvx"]
 data = PackedVector3Array(-75, 2.5, 75, 75, 2.5, 75, -75, -2.5, 75, 75, 2.5, 75, 75, -2.5, 75, -75, -2.5, 75, 75, 2.5, -75, -75, 2.5, -75, 75, -2.5, -75, -75, 2.5, -75, -75, -2.5, -75, 75, -2.5, -75, 75, 2.5, 75, 75, 2.5, -75, 75, -2.5, 75, 75, 2.5, -75, 75, -2.5, -75, 75, -2.5, 75, -75, 2.5, -75, -75, 2.5, 75, -75, -2.5, -75, -75, 2.5, 75, -75, -2.5, 75, -75, -2.5, -75, 75, 2.5, 75, -75, 2.5, 75, 75, 2.5, -75, -75, 2.5, 75, -75, 2.5, -75, 75, 2.5, -75, -75, -2.5, 75, 75, -2.5, 75, -75, -2.5, -75, 75, -2.5, 75, 75, -2.5, -75, -75, -2.5, -75)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_funo8"]
+albedo_color = Color(1, 0, 0.1882353, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_gkrjc"]
+material = SubResource("StandardMaterial3D_funo8")
 size = Vector3(1, 50, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5qbgb"]

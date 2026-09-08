@@ -2,8 +2,8 @@
 
 [ext_resource type="FontFile" uid="uid://d111cyfv3orl0" path="res://fonts/Jovanny Lemonad - Bender.otf" id="1_fvxvu"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qauff"]
-bg_color = Color(0.29072073, 0.29072073, 0.2907206, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e3aya"]
+bg_color = Color(0.40930912, 0.23089921, 0.25194132, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -14,11 +14,13 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fvxvu"]
-bg_color = Color(0.23457715, 0.42957956, 0.34987882, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vqgn"]
+bg_color = Color(0.3764706, 0.7764706, 0.2627451, 1)
 border_width_left = 2
 border_width_top = 2
+border_width_right = 2
 border_width_bottom = 2
+border_blend = true
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -28,5 +30,5 @@ corner_radius_bottom_left = 12
 Label/font_sizes/font_size = 16
 Label/fonts/font = ExtResource("1_fvxvu")
 ProgressBar/fonts/font = ExtResource("1_fvxvu")
-ProgressBar/styles/background = SubResource("StyleBoxFlat_qauff")
-ProgressBar/styles/fill = SubResource("StyleBoxFlat_fvxvu")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_e3aya")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_1vqgn")

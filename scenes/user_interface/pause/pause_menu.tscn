@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bjdrv2241vug" path="res://scenes/user_interface/pause/pause_menu.gd" id="1_s86xf"]
 [ext_resource type="Theme" uid="uid://bk7sa6wb70008" path="res://themes/menu_theme.tres" id="1_uxdrv"]
-[ext_resource type="PackedScene" uid="uid://b38u586cienfc" path="res://scenes/entities/player/stats_panel.tscn" id="2_t06c2"]
+[ext_resource type="PackedScene" uid="uid://cssansavn4oax" path="res://scenes/user_interface/skill_wheel/main_stats_panel.tscn" id="3_uxdrv"]
+[ext_resource type="PackedScene" uid="uid://dtldoj1wgw4xo" path="res://scenes/user_interface/skill_wheel/player_stats_panel.tscn" id="4_i224r"]
 [ext_resource type="PackedScene" uid="uid://jpkh2175b3m8" path="res://scenes/user_interface/skill_wheel/skills_viewer.tscn" id="4_nooba"]
 
 [node name="PauseMenu" type="Control" unique_id=1213401232]
@@ -12,77 +13,111 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_uxdrv")
 script = ExtResource("1_s86xf")
 
-[node name="DimBackground" type="ColorRect" parent="." unique_id=1608021586]
+[node name="Background" type="ColorRect" parent="." unique_id=177067969]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.34901962, 0.34901962, 0.34901962, 0.50980395)
+mouse_filter = 2
+color = Color(0.6509804, 0.6392157, 0.6392157, 0.49019608)
 
-[node name="Content" type="Panel" parent="." unique_id=1940682217]
+[node name="Content" type="Control" parent="." unique_id=1368671787]
 layout_mode = 1
-anchors_preset = 9
+anchor_right = 0.75000006
 anchor_bottom = 1.0
-offset_right = 760.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -6.1035156e-05
+offset_bottom = -20.0
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="StatsView" parent="Content" unique_id=89320526 instance=ExtResource("2_t06c2")]
+[node name="PlayerStats" type="VBoxContainer" parent="Content" unique_id=934108186]
 layout_mode = 1
-
-[node name="SkillsViewer" parent="Content" unique_id=167947701 instance=ExtResource("4_nooba")]
-layout_mode = 1
-
-[node name="Navigation" type="Panel" parent="." unique_id=2085628655]
-layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -512.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MainStatContainer" type="PanelContainer" parent="Content/PlayerStats" unique_id=2087360307]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MainStatsPanel" parent="Content/PlayerStats/MainStatContainer" unique_id=235609104 instance=ExtResource("3_uxdrv")]
+layout_mode = 2
+
+[node name="StatsSkills" type="HBoxContainer" parent="Content/PlayerStats" unique_id=844980528]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayerStatContainer" type="PanelContainer" parent="Content/PlayerStats/StatsSkills" unique_id=2002295153]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerStatsPanel" parent="Content/PlayerStats/StatsSkills/PlayerStatContainer" unique_id=1767838014 instance=ExtResource("4_i224r")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillWheelContainer" type="PanelContainer" parent="Content/PlayerStats/StatsSkills" unique_id=1745194765]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+mouse_filter = 1
+
+[node name="SkillsViewer" parent="Content/PlayerStats/StatsSkills/SkillWheelContainer" unique_id=167947701 instance=ExtResource("4_nooba")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.25
+
+[node name="Navigation" type="Control" parent="." unique_id=1610862714]
+layout_mode = 1
+anchor_left = 0.75000006
+anchor_top = 0.028
+anchor_right = 0.984
+anchor_bottom = 0.97200006
+offset_left = -6.1035156e-05
+offset_top = -0.15999985
+offset_right = 0.47998047
+offset_bottom = 0.15997314
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="MenuButtons" type="VBoxContainer" parent="Navigation" unique_id=112463783]
+[node name="ButtonContainer" type="PanelContainer" parent="Navigation" unique_id=890416036]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -200.0
-offset_right = 150.0
-offset_bottom = 200.0
+anchors_preset = -1
+anchor_left = 0.033
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.10000038
+offset_right = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Resume" type="Button" parent="Navigation/MenuButtons" unique_id=95872121]
+[node name="MenuButtons" type="VBoxContainer" parent="Navigation/ButtonContainer" unique_id=2089206549]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Resume" type="Button" parent="Navigation/ButtonContainer/MenuButtons" unique_id=1828082042]
+custom_minimum_size = Vector2(125, 50)
 layout_mode = 2
 size_flags_vertical = 3
 text = "RESUME"
 
-[node name="Stats" type="Button" parent="Navigation/MenuButtons" unique_id=282213753]
-layout_mode = 2
-size_flags_vertical = 3
-text = "STATS
-"
-
-[node name="Skills" type="Button" parent="Navigation/MenuButtons" unique_id=2042017063]
-layout_mode = 2
-size_flags_vertical = 3
-text = "SKILLS"
-
-[node name="Save" type="Button" parent="Navigation/MenuButtons" unique_id=234025358]
+[node name="Save" type="Button" parent="Navigation/ButtonContainer/MenuButtons" unique_id=948931261]
 layout_mode = 2
 size_flags_vertical = 3
 text = "SAVE"
 
-[node name="Quit" type="Button" parent="Navigation/MenuButtons" unique_id=2106070604]
+[node name="Quit" type="Button" parent="Navigation/ButtonContainer/MenuButtons" unique_id=483720447]
 layout_mode = 2
 size_flags_vertical = 3
 text = "QUIT"

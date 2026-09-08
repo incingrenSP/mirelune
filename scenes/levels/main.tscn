@@ -6,7 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://bkg1ifocfhv8h" path="res://scenes/levels/camera_controller.tscn" id="5_b6bv0"]
 [ext_resource type="PackedScene" uid="uid://b3mfu23tmy3sg" path="res://scenes/entities/npcs/npc.tscn" id="5_u81e1"]
 [ext_resource type="PackedScene" uid="uid://5kfsgk18od45" path="res://scenes/user_interface/game_ui.tscn" id="7_vkq25"]
+[ext_resource type="Resource" uid="uid://b6fh7u3tcfjnv" path="res://scenes/entities/player/player_stats.tres" id="8_7lrji"]
+[ext_resource type="Texture2D" uid="uid://db5i4xb4kmb8e" path="res://graphics/characters/test.jpg" id="8_vkq25"]
 [ext_resource type="PackedScene" uid="uid://ilp4xcuko1st" path="res://scenes/entities/enemies/enemy.tscn" id="9_7lrji"]
+[ext_resource type="Resource" uid="uid://b0e70yk1frlle" path="res://scenes/entities/player/player_skill_info.tres" id="9_rssyh"]
 
 [node name="Main" type="Node3D" unique_id=1706958914]
 script = ExtResource("1_j4d2a")
@@ -18,10 +21,6 @@ light_energy = 2.0
 shadow_enabled = true
 
 [node name="World" parent="." unique_id=4041304 instance=ExtResource("1_y0acb")]
-
-[node name="Player" parent="." unique_id=1313099410 node_paths=PackedStringArray("camera") instance=ExtResource("2_j4d2a")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, 6.537318)
-camera = NodePath("../CameraController")
 
 [node name="NPC" parent="." unique_id=21563850 node_paths=PackedStringArray("routine_point_a", "routine_point_b") instance=ExtResource("5_u81e1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.995529, 3.5000005, 0)
@@ -46,3 +45,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.968628, 4.308962, -33.505
 
 [node name="GameUI" parent="." unique_id=1136530938 node_paths=PackedStringArray("player") instance=ExtResource("7_vkq25")]
 player = NodePath("../Player")
+
+[node name="Player" parent="." unique_id=958012278 node_paths=PackedStringArray("camera") instance=ExtResource("2_j4d2a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1281776, 3.1392107, 15.790283)
+camera = NodePath("../CameraController")
+player_portrait = ExtResource("8_vkq25")
+player_stats = ExtResource("8_7lrji")
+player_skills = ExtResource("9_rssyh")

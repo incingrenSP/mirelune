@@ -2,41 +2,65 @@
 
 [ext_resource type="Script" uid="uid://jykaton2a86t" path="res://scenes/user_interface/skill_wheel/skill_entry.gd" id="1_cckhb"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c46qy"]
+bg_color = Color(0.43807936, 0.5683166, 1, 0.69803923)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5362543, 0.46085715, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Theme" id="Theme_60o26"]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_c46qy")
+
 [node name="SkillEntry" type="PanelContainer" unique_id=1689039885]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_behavior_recursive = 2
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_60o26")
 script = ExtResource("1_cckhb")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=532966529]
 layout_mode = 2
+mouse_filter = 2
+mouse_behavior_recursive = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=758747075]
+[node name="EntryVBox" type="VBoxContainer" parent="MarginContainer" unique_id=758747075]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=660105191]
+[node name="InfoHBox" type="HBoxContainer" parent="MarginContainer/EntryVBox" unique_id=660105191]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
 
-[node name="SkillNameLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=95097837]
+[node name="SkillNameLabel" type="Label" parent="MarginContainer/EntryVBox/InfoHBox" unique_id=95097837]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SkillName"
 
-[node name="CostLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=81563966]
+[node name="CostLabel" type="Label" parent="MarginContainer/EntryVBox/InfoHBox" unique_id=81563966]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SP:"
 
-[node name="DamageLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=142339313]
+[node name="DamageLabel" type="Label" parent="MarginContainer/EntryVBox/InfoHBox" unique_id=142339313]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DMG:"
 
-[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=106338541]
+[node name="Description" type="Label" parent="MarginContainer/EntryVBox" unique_id=106338541]
 layout_mode = 2
 size_flags_vertical = 3
 text = "SkillDescription"

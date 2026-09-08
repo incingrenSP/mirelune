@@ -1,0 +1,222 @@
+[gd_scene format=3 uid="uid://cssansavn4oax"]
+
+[ext_resource type="Script" uid="uid://dtsx5ng535jb" path="res://scenes/user_interface/skill_wheel/main_stats_panel.gd" id="1_7bbk7"]
+[ext_resource type="FontFile" uid="uid://d111cyfv3orl0" path="res://fonts/Jovanny Lemonad - Bender.otf" id="2_tw230"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e3aya"]
+bg_color = Color(0.40930912, 0.23089921, 0.25194132, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72464263, 0.72464263, 0.7246424, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vqgn"]
+bg_color = Color(0.3764706, 0.7764706, 0.2627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="Theme" id="Theme_fy3s2"]
+Label/font_sizes/font_size = 16
+Label/fonts/font = ExtResource("2_tw230")
+ProgressBar/fonts/font = ExtResource("2_tw230")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_e3aya")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_1vqgn")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ubphu"]
+bg_color = Color(0.35834068, 0.27013063, 0.19106528, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72464263, 0.72464263, 0.7246424, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_duj6g"]
+bg_color = Color(0.91764706, 0.5803922, 0.2784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="Theme" id="Theme_swasa"]
+Label/font_sizes/font_size = 16
+Label/fonts/font = ExtResource("2_tw230")
+ProgressBar/fonts/font = ExtResource("2_tw230")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_ubphu")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_duj6g")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c2jry"]
+bg_color = Color(0.2560881, 0.28323945, 0.39667404, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72464263, 0.72464263, 0.7246424, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_68frv"]
+bg_color = Color(0.3647059, 0.54901963, 0.9019608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="Theme" id="Theme_asfd2"]
+Label/font_sizes/font_size = 16
+Label/fonts/font = ExtResource("2_tw230")
+ProgressBar/fonts/font = ExtResource("2_tw230")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_c2jry")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_68frv")
+
+[node name="MainStatsPanel" type="Control" unique_id=235609104]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7bbk7")
+
+[node name="StatsPanel" type="Control" parent="." unique_id=515716142]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 0.8
+grow_horizontal = 2
+
+[node name="Portrait" type="TextureRect" parent="StatsPanel" unique_id=34742099]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.016
+anchor_top = 0.035
+anchor_right = 0.33400002
+anchor_bottom = 0.96500003
+offset_left = -0.48000145
+offset_top = -0.15999985
+offset_right = -0.52001953
+offset_bottom = 0.15997314
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 5
+stretch_mode = 5
+
+[node name="PlayerStats" type="VBoxContainer" parent="StatsPanel" unique_id=1989942822]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.36400002
+anchor_top = 0.28100002
+anchor_right = 0.9710001
+anchor_bottom = 0.55600005
+offset_left = 0.079956055
+offset_top = 0.14398193
+offset_right = 0.11987305
+offset_bottom = -0.25604248
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="HPContainer" type="HBoxContainer" parent="StatsPanel/PlayerStats" unique_id=430297232]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="StatsPanel/PlayerStats/HPContainer" unique_id=1127009522]
+layout_mode = 2
+text = "HP:"
+
+[node name="HPBar" type="ProgressBar" parent="StatsPanel/PlayerStats/HPContainer" unique_id=557698317]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 5.0
+theme = SubResource("Theme_fy3s2")
+show_percentage = false
+
+[node name="SPContainer" type="HBoxContainer" parent="StatsPanel/PlayerStats" unique_id=939531560]
+layout_mode = 2
+
+[node name="SPLabel" type="Label" parent="StatsPanel/PlayerStats/SPContainer" unique_id=13066958]
+layout_mode = 2
+text = "SP:"
+
+[node name="SPBar" type="ProgressBar" parent="StatsPanel/PlayerStats/SPContainer" unique_id=2041725478]
+custom_minimum_size = Vector2(0, 25)
+custom_maximum_size = Vector2(500, -1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 5.0
+theme = SubResource("Theme_swasa")
+show_percentage = false
+
+[node name="XPContainer" type="HBoxContainer" parent="StatsPanel/PlayerStats" unique_id=926205003]
+layout_mode = 2
+
+[node name="XPLabel" type="Label" parent="StatsPanel/PlayerStats/XPContainer" unique_id=2035813195]
+layout_mode = 2
+text = "XP:"
+
+[node name="XPBar" type="ProgressBar" parent="StatsPanel/PlayerStats/XPContainer" unique_id=1899920267]
+custom_minimum_size = Vector2(0, 25)
+custom_maximum_size = Vector2(400, -1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 5.0
+theme = SubResource("Theme_asfd2")
+show_percentage = false
+
+[node name="NamePanel" type="Control" parent="." unique_id=2096577096]
+layout_mode = 1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_right = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="PlayerID" type="HBoxContainer" parent="NamePanel" unique_id=142265365]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerName" type="Label" parent="NamePanel/PlayerID" unique_id=1333764798]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 1
+size_flags_stretch_ratio = 2.0
+text = "PlayerName"
+
+[node name="PlayerLevel" type="Label" parent="NamePanel/PlayerID" unique_id=600048343]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Lvl. XX"
