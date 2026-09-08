@@ -35,14 +35,25 @@ func _recompute() -> void:
 					StatModifierEntry.ModifierType.PERCENT_OF_CURRENT:
 						percent_of_current_sum += mod.value
 						
-		var sub_total: float = base + flat_sum + (base * percent_additive_sum)
-		var final_value: float = sub_total + (sub_total + percent_of_current_sum)
+		# (base + flats) * multiplier
+		#var sub_total: float = base + flat_sum
+		#sub_total += base * percent_additive_sum
+		#var final_value: float = sub_total * (1.0 + percent_of_current_sum)
+		
+		# (base * multiplier) + flats
+		var sub_total: float = base * percent_additive_sum
+		sub_total += flat_sum
+		var final_value: float = sub_total * (1.0 + percent_of_current_sum)
+		
 		_cache[stat_type] = final_value
 	
 	_dirty = false
 
 func equip_skill(skill: SkillData) -> void:
-	if skill == null or skill.category == SkillData.SkillCategory.ACTIVE:
+	if skill == null:
+		return
+		
+	if skill.category == SkillData.SkillCategory.ACTIVE:
 		return
 	
 	if _equipped_skills.has(skill):
