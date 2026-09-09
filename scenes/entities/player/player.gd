@@ -9,6 +9,9 @@ const INTERACT_TIMEOUT := 0.5
 var facing_right := true
 var interact_timer := 0.0
 
+@onready var hp_sp_bars: Node3D = $WorldUI/ResourceBars/HPSPBars
+@onready var casting_progress_ui: Node3D = $WorldUI/ResourceBars/CastingUI
+
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
 @onready var player_skill_input: Node = $PlayerSkillInput
 @onready var skill_targeting: SkillTargetingController = $SkillTargetingController
@@ -187,25 +190,6 @@ func update_sprite(input_dir: Vector2):
 			sprite.play("walk")
 	else:
 		sprite.play("idle")
-		
-		
-func resource_bar_transition(delta: float):
-	var target_hp_pct = player_stats.hp / player_stats.max_hp
-	var target_sp_pct = player_stats.sp / player_stats.max_sp
-	
-	displayed_hp_pct = move_toward(
-		displayed_hp_pct,
-		target_hp_pct,
-		bar_smooth_speed * delta
-	)
-	displayed_sp_pct = move_toward(
-		displayed_sp_pct,
-		target_sp_pct,
-		bar_smooth_speed * delta
-	)
-	
-	update_hp_bar()
-	update_sp_bar()
 	
 func set_combat_state(value: bool):
 	IN_COMBAT = value
@@ -284,10 +268,6 @@ func use_skill(skill_id: String) -> void:
 		_:
 			_execute_skill(data)
 
-func resource_bar_visibility():
-	$WorldUI/Label3D.visible = IN_COMBAT or is_hovered
-	$WorldUI/ResourceBars.visible = IN_COMBAT or is_hovered
-
 func show_skill_wheel() -> void:
 	if IN_COMBAT:
 		skill_wheel_overlay.open(self)
@@ -295,11 +275,53 @@ func show_skill_wheel() -> void:
 		
 	skill_wheel_overlay.close()
 
+func resource_bar_transition(delta: float):
+	var target_hp_pct = player_stats.hp / player_stats.max_hp
+	var target_sp_pct = player_stats.sp / player_stats.max_sp
+	
+	displayed_hp_pct = move_toward(
+		displayed_hp_pct,
+		target_hp_pct,
+		bar_smooth_speed * delta
+	)
+	displayed_sp_pct = move_toward(
+		displayed_sp_pct,
+		target_sp_pct,
+		bar_smooth_speed * delta
+	)
+	
+	update_hp_bar()
+	update_sp_bar()
+
+func resource_bar_visibility():
+	$WorldUI/Label3D.visible = IN_COMBAT or is_hovered
+	$WorldUI/ResourceBars/HPSPBars.visible = IN_COMBAT or is_hovered
+
 func update_hp_bar():
-	($WorldUI/ResourceBars/HPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_hp_pct)
+	($WorldUI/ResourceBars/HPSPBars/HPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_hp_pct)
 
 func update_sp_bar():
-	($WorldUI/ResourceBars/SPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_sp_pct)
+	($WorldUI/ResourceBars/HPSPBars/SPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_sp_pct)
+
+func update_cast_progress():
+	($WorldUI/ResourceBars/CastingUI/CastProgressFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_cast_pct)
+
+func start_progress_ui() -> void:
+	player_stats.cast = 0.0
+	displayed_cast_pct = 0.0
+	update_cast_progress()
+	
+	casting_progress_ui.visible = true
+	
+func set_progress_ui(value: float) -> void:
+	player_stats.cast = clamp(value, 0.0, player_stats.max_cast)
+	displayed_cast_pct = player_stats.cast / player_stats.max_cast
+	
+	update_cast_progress()
+	
+func stop_progress_ui() -> void:
+	casting_progress_ui.visible = false
+	player_stats.cast = 0.0
 
 func request_pause():
 	pause_menu.open()

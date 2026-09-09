@@ -358,6 +358,9 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_5qbgb"]
+radius = 10.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ylx48"]
 shading_mode = 0
 albedo_color = Color(0.43137255, 0, 0, 1)
@@ -410,9 +413,6 @@ material = SubResource("StandardMaterial3D_wyqsp")
 size = Vector2(0.75, 0.1)
 center_offset = Vector3(-0.125, -0.12, 0.01)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_5qbgb"]
-radius = 10.0
-
 [node name="Enemy" unique_id=21563850 groups=["enemy"] instance=ExtResource("1_yfmsl")]
 script = ExtResource("2_j3iiu")
 routine_enabled = true
@@ -421,7 +421,7 @@ IN_COMBAT = false
 attack_duration = 0.5
 attack_cooldown = 1.0
 
-[node name="InteractionArea" parent="." index="1" unique_id=17577018 node_paths=PackedStringArray("enemy")]
+[node name="InteractionArea" parent="." index="3" unique_id=17577018 node_paths=PackedStringArray("enemy")]
 script = ExtResource("2_20lqd")
 enemy = NodePath("..")
 
@@ -430,7 +430,13 @@ billboard = 2
 sprite_frames = SubResource("SpriteFrames_essrt")
 animation = &"attack_3"
 
-[node name="WorldUI" parent="." index="3" unique_id=747760753]
+[node name="PatrolZone" type="Area3D" parent="." index="5" unique_id=1531947245]
+input_ray_pickable = false
+
+[node name="Range" type="CollisionShape3D" parent="PatrolZone" index="0" unique_id=569542662]
+shape = SubResource("SphereShape3D_5qbgb")
+
+[node name="WorldUI" parent="." index="6" unique_id=747760753]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 
 [node name="ResourceBars" type="Node3D" parent="WorldUI" index="0" unique_id=2084622745]
@@ -457,9 +463,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
 visible = false
 pixel_size = 0.01
 billboard = 2
-
-[node name="PatrolZone" type="Area3D" parent="." index="5" unique_id=1531947245]
-input_ray_pickable = false
-
-[node name="Range" type="CollisionShape3D" parent="PatrolZone" index="0" unique_id=569542662]
-shape = SubResource("SphereShape3D_5qbgb")

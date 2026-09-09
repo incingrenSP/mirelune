@@ -16,6 +16,15 @@ func _mark_dirty() -> void:
 func _recompute() -> void:
 	_cache.clear()
 	
+	if not is_instance_valid(entity_skills):
+		_dirty = false
+		return
+		
+	var modifier_skills: Array[SkillData] = []
+	
+	if is_instance_valid(entity_skills):
+		modifier_skills = entity_skills.get_all_stat_modifier_skills()
+	
 	for stat_type in StatModifierEntry.StatType.values():
 		var base: float = get_base_stat(stat_type)
 		var flat_sum := 0.0
@@ -59,16 +68,11 @@ func equip_skill(skill: SkillData) -> void:
 	if skill.category == SkillData.SkillCategory.ACTIVE:
 		return
 	
-	if entity_skills.equipped_passive_skills.has(skill):
+	if entity_skills.get_all_stat_modifier_skills().has(skill):
 		return
 		
-	entity_skills.equipped_passive_skills.append(skill)
+	entity_skills.get_all_stat_modifier_skills().append(skill)
 	_mark_dirty()
-	
-func unequip_skill(skill: SkillData) -> void:
-	if entity_skills.has(skill):
-		entity_skills.erase(skill)
-		_mark_dirty()
 	
 func get_base_stat(stat: int) -> float:
 	if not is_instance_valid(entity_stats):
@@ -110,7 +114,7 @@ func has_flag(flag: int) -> bool:
 	if not is_instance_valid(entity_skills):
 		return false
 		
-	for skill in entity_skills:
+	for skill in entity_skills.get_all_stat_modifier_skills():
 		if is_instance_valid(skill) and skill.has_flag(flag):
 			return true
 			
@@ -129,3 +133,11 @@ func set_current_sp(value: float) -> void:
 		return
 	entity_stats.sp = clamp(value, 0.0, get_stat(StatModifierEntry.StatType.MAX_SP))
 	
+func get_equipped_active_skills() -> Array[SkillData]:
+	return entity_skills.get_equipped_active_skills() if is_instance_valid(entity_skills) else []
+	
+func get_equipped_passive_skills() -> Array[SkillData]:
+	return entity_skills.get_equipped_passive_skills() if is_instance_valid(entity_skills) else []
+	
+func get_current_skill() -> SkillData:
+	return entity_skills.get_current_skill() if is_instance_valid(entity_skills) else null

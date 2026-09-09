@@ -47,8 +47,10 @@ func _process(delta: float) -> void:
 		return
 		
 	_cast_time_remaining -= delta
-	_indicator.cast_progress = clamp(1 - (_cast_time_remaining / max(_cast_time_total, 0.001)), 0.0, 1.0)
-	_indicator.refresh()
+	var progress: float = clamp(1 - (_cast_time_remaining / max(_cast_time_total, 0.001)), 0.0, 1.0)
+	
+	if is_instance_valid(caster.casting_progress_ui):
+		caster.set_progress_ui(progress)
 	
 	if _cast_time_remaining <= 0.0:
 		_complete_cast()
@@ -70,6 +72,9 @@ func _reset_state() -> void:
 	
 	if is_instance_valid(_indicator):
 		_indicator.visible = false
+		
+	if is_instance_valid(caster.casting_progress_ui):
+		caster.stop_progress_ui()
 
 func _ensure_indicator() -> void:
 	if is_instance_valid(_indicator):
@@ -174,7 +179,7 @@ func start_targeting(skill: SkillData) -> void:
 		
 	active_skill = skill
 	state = State.AIMING
-	
+		
 	_ensure_indicator()
 	
 	_indicator.top_level = false
@@ -183,9 +188,7 @@ func start_targeting(skill: SkillData) -> void:
 	
 	_configure_indicator_for_skill()
 	
-	_indicator.locked = false
 	_indicator.visible = true
-	_indicator.cast_progress = 0.0
 	
 	var facing := -caster.global_transform.basis.z
 	update_aim(caster.global_position + facing)
@@ -213,11 +216,8 @@ func confirm() -> void:
 	_indicator.top_level = true
 	_indicator.global_transform = Transform3D(Basis(Vector3.UP, yaw), caster.global_position)
 	
-	_indicator.locked = true
-	_indicator.cast_progress = 0.0
-	_indicator.refresh()
-	
 	var cast_speed := 1.0
+	
 	if is_instance_valid(stat_component):
 		var raw_speed: float = stat_component.get_stat(StatModifierEntry.StatType.CAST_SPEED)
 		
@@ -227,6 +227,9 @@ func confirm() -> void:
 	_cast_time_total = max(active_skill.cast_time / cast_speed, 0.0)
 	_cast_time_remaining = _cast_time_total
 	
+	if is_instance_valid(caster.casting_progress_ui):
+		caster.start_progress_ui()
+		
 	cast_started.emit(active_skill, _cast_target_data)
 	
 	if _cast_time_total <= 0.0:

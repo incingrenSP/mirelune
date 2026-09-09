@@ -62,25 +62,59 @@ func _rebuild_fill(color: Color) -> void:
 	var added := false
 	
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	st.set_color(color)
-	
+	st.set_color(fill_color)
+
 	match mode:
 		Mode.CONE:
 			var half := deg_to_rad(cone_angle_degrees) * 0.5
 			_add_wedge_fill(st, Vector3.ZERO, range_radius, direction_angle - half, direction_angle + half, 24)
-			
-		Mode.RETICLE:
-			_add_wedge_fill(st, reticle_local_pos, 0.25, 0.0, TAU, 16)
 			added = true
-			
-		_:
+
+		Mode.RETICLE:
+			_add_wedge_fill(st, reticle_local_pos, 0.25, 0.0, TAU, 24)
+			added = true
+
+		Mode.CIRCLE:
+			_add_wedge_fill(st, reticle_local_pos, circle_radius, 0.0, TAU, 32)
+			added = true
+
+		Mode.DIRECTIONAL:
+			_add_wedge_fill(st, Vector3.ZERO, range_radius, 0.0, TAU, 64)
+			added = true
+
+		Mode.NONE:
 			pass
-			
-	if locked:
+
+	if locked and cast_progress > 0.0:
 		st.set_color(color)
-		_add_wedge_fill(st, Vector3.ZERO, 0.4, -PI * 0.5, -PI * 0.5 + TAU * cast_progress, 24)
+
+		match mode:
+			Mode.CONE:
+				var half := deg_to_rad(cone_angle_degrees) * 0.5
+
+				_add_wedge_fill(
+					st,
+					Vector3.ZERO,
+					range_radius,
+					direction_angle - half,
+					direction_angle - half + (deg_to_rad(cone_angle_degrees) * cast_progress),
+					24
+				)
+
+			Mode.RETICLE:
+				_add_wedge_fill(st, reticle_local_pos, 0.25, -PI * 0.5, -PI * 0.5 + TAU * cast_progress, 24)
+
+			Mode.CIRCLE:
+				_add_wedge_fill(st, reticle_local_pos, circle_radius, -PI * 0.5, -PI * 0.5 + TAU * cast_progress, 32)
+
+			Mode.DIRECTIONAL:
+				_add_wedge_fill(st, Vector3.ZERO, range_radius, -PI * 0.5, -PI * 0.5 + TAU * cast_progress, 64)
+
+			Mode.NONE:
+				pass
+
 		added = true
-		
+
 	_fill_mesh.mesh = st.commit() if added else null
 
 func _rebuild_lines(color: Color) -> void:

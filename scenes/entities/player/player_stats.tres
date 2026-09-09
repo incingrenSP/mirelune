@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1_rlnu0")
-max_sp = 150.0
-sp_regen_rate = 20.0
+max_sp = 200.0
+sp = 200.0
+sp_regen_rate = 50.0

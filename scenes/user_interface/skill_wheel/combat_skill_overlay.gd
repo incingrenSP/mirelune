@@ -6,7 +6,7 @@ extends Control
 var player: Player
 var registered_skill_id: String = ""
 
-const SWITCH_COOLDOWN_SEC: float = 10.0
+const SWITCH_COOLDOWN_SEC: float = 1.0
 var cooldown_timer: float = 0
 
 func _ready() -> void:

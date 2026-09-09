@@ -3,6 +3,7 @@ extends CharacterBody3D
 
 var displayed_hp_pct := 1.0
 var displayed_sp_pct := 1.0
+var displayed_cast_pct := 1.0
 
 @export var bar_smooth_speed := 2.5
 @onready var focus_point: Marker3D = $CameraFocusPoint

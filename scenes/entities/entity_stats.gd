@@ -19,3 +19,6 @@ extends Resource
 @export var sp_regen_rate: float = 5.0
 @export var xp_multiplier: float = 0.0
 @export var cast_speed: float = 1.0
+
+var max_cast: float = 1.0
+var cast: float = 0.0

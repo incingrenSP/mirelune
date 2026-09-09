@@ -15,6 +15,7 @@ offset_bottom = -40.0
 grow_vertical = 0
 mouse_default_cursor_shape = 7
 script = ExtResource("1_yosb1")
+SWITCH_COOLDOWN_SEC = 1.0
 
 [node name="SkillWheel" parent="." unique_id=175051483 instance=ExtResource("2_yosb1")]
 layout_mode = 1
