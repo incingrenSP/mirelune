@@ -13,6 +13,7 @@ var interact_timer := 0.0
 @onready var player_skill_input: Node = $PlayerSkillInput
 @onready var skill_targeting: SkillTargetingController = $SkillTargetingController
 
+@export var stat_component: StatComponent
 @export var pause_menu: PauseMenu
 @export var skill_wheel_overlay: CombatSkillOverlay
 @export var trigger_area: PlayerTriggerArea
@@ -36,6 +37,9 @@ func _ready():
 	player_stats.hp = player_stats.max_hp
 	
 	player_skills.player_unlocked_skills.append("0")
+	player_skills.player_unlocked_skills.append("1")
+	player_skills.player_unlocked_skills.append("2")
+	
 	print("SkillID = 0 in Database: ", SkillDatabase.get_skill("0"))
 	print("Active Skill Slots: %d" % player_skills.unlocked_active_slots)
 	print("Passive Skill Slots: %d" % player_skills.unlocked_passive_slots)

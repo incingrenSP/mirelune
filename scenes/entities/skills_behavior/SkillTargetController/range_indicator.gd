@@ -79,7 +79,7 @@ func _rebuild_fill(color: Color) -> void:
 		_add_wedge_fill(st, Vector3.ZERO, 0.4, -PI * 0.5, -PI * 0.5 + TAU * cast_progress, 24)
 		added = true
 		
-		_fill_mesh.mesh = st.commit() if added else null
+	_fill_mesh.mesh = st.commit() if added else null
 
 func _rebuild_lines(color: Color) -> void:
 	var st := SurfaceTool.new()

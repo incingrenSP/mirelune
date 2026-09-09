@@ -11,3 +11,4 @@ enum AOEShape {
 @export var multi_hit: int = 1
 @export var blocked_by_terrain: bool = true
 @export var accuracy: float = 1.0
+@export var cone_angle: float = 30.0

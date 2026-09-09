@@ -20,7 +20,8 @@ var active_skill: SkillData
 
 var _indicator: RangeIndicator
 var _last_angle: float = 0.0
-var _last_reticle_local: Vector3 = Vector3.ZERO
+var _last_world_offset: Vector3 = Vector3.ZERO
+#var _last_reticle_local: Vector3 = Vector3.ZERO
 var _cast_time_total: float = 0.0
 var _cast_time_remaining: float = 0.0
 
@@ -104,7 +105,7 @@ func _build_target_data() -> Dictionary:
 			data["direction"] = Vector3(cos(_last_angle), 0.0, sin(_last_angle))
 			
 		SkillData.AttackType.SUREHIT:
-			data["target_point"] = caster.global_position + _last_reticle_local
+			data["target_point"] = caster.global_position + _last_world_offset
 			
 		SkillData.AttackType.AOE:
 			var behavior := active_skill.behavior
@@ -114,7 +115,7 @@ func _build_target_data() -> Dictionary:
 				data["direction"] = Vector3(cos(_last_angle), 0.0, sin(_last_angle))
 				
 			else:
-				data["target_point"] = caster.global_position + _last_reticle_local
+				data["target_point"] = caster.global_position + _last_world_offset
 				
 	return data
 	
@@ -126,10 +127,12 @@ func _recompute_pointer(world_point: Vector3) -> void:
 		flat = Vector3.RIGHT
 
 	_last_angle = atan2(flat.z, flat.x)
-	_last_reticle_local = flat.limit_length(_indicator.range_radius)
+	_last_world_offset = flat.limit_length(_indicator.range_radius)
+	
+	var local_flat: Vector3 = caster.global_transform.basis.inverse() * flat
 
-	_indicator.direction_angle = _last_angle
-	_indicator.reticle_local_pos = _last_reticle_local
+	_indicator.direction_angle = atan2(local_flat.z, local_flat.x)
+	_indicator.reticle_local_pos = local_flat.limit_length(_indicator.range_radius)
 
 func start_targeting(skill: SkillData) -> void:
 	if skill == null:

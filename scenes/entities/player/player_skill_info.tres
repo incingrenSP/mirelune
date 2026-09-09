@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1_pfv2d")
+unlocked_active_slots = 3
