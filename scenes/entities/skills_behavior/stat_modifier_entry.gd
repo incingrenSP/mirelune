@@ -8,7 +8,7 @@ enum StatType {
 	HP_REGEN,		# flat modifiers
 	SP_REGEN,
 	XP_MULT,		# % modifiers
-	CAST_SPEED		# % modifiers
+	CAST_TIME		# % modifiers
 }
 
 enum ModifierType {
@@ -29,7 +29,7 @@ static func to_key(stat: StatType) -> String:
 		StatType.HP_REGEN: return "hp_regen_rate"
 		StatType.SP_REGEN: return "sp_regen_rate"
 		StatType.XP_MULT: return "xp_multiplier"
-		StatType.CAST_SPEED: return "cast_speed_modifier"
+		StatType.CAST_TIME: return "cast_time_reduction"
 	
 	return ""
 		
