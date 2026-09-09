@@ -301,7 +301,7 @@ player_portrait = null
 player_stats = null
 player_skills = null
 
-[node name="InteractionArea" parent="." index="1" unique_id=17577018 node_paths=PackedStringArray("player")]
+[node name="InteractionArea" parent="." index="3" unique_id=17577018 node_paths=PackedStringArray("player")]
 script = ExtResource("3_1murt")
 player = NodePath("..")
 
@@ -310,7 +310,7 @@ billboard = 2
 sprite_frames = SubResource("SpriteFrames_o12gi")
 animation = &"idle"
 
-[node name="WorldUI" parent="." index="3" unique_id=747760753]
+[node name="WorldUI" parent="." index="5" unique_id=747760753]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 
 [node name="ResourceBars" type="Node3D" parent="WorldUI" index="0" unique_id=2084622745]
