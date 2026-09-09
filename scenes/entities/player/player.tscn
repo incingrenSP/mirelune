@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://daxbx2umuhr4" path="res://graphics/characters/test_walk.png" id="5_bj7e2"]
 [ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="8_1murt"]
 [ext_resource type="Script" uid="uid://b25hxi274pitq" path="res://scenes/entities/player/player_trigger_area.gd" id="8_5sj0x"]
+[ext_resource type="Script" uid="uid://da87c1ep4jeqq" path="res://scenes/entities/player/player_skill_input.gd" id="9_5sj0x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bjvvg"]
 atlas = ExtResource("3_bjvvg")
@@ -296,25 +297,9 @@ radius = 3.0
 script = ExtResource("2_bjvvg")
 trigger_area = NodePath("PlayerTriggerArea")
 IN_COMBAT = false
-player_name = "Player"
-player_level = 20
-xp = 0
-max_xp = 1200
-max_hp = 100.0
-sp = 0.0
-max_sp = 50.0
-atk = 10
-def = 5
-adr = 10
-hp_regen_rate = 0.0
-sp_regen_rate = 5.0
-spd = 4
-unlocked_active_slots = 1
-unlocked_passive_slots = 1
-core_unlocked = false
-equipped_active_skills = Array[String](["", "", ""])
-equipped_passive_skills = Array[String](["", "", ""])
-core_skill_id = ""
+player_portrait = null
+player_stats = null
+player_skills = null
 
 [node name="InteractionArea" parent="." index="1" unique_id=17577018 node_paths=PackedStringArray("player")]
 script = ExtResource("3_1murt")
@@ -364,3 +349,7 @@ script = ExtResource("8_5sj0x")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerTriggerArea" index="0" unique_id=517072846]
 shape = SubResource("SphereShape3D_gkrjc")
+
+[node name="PlayerSkillInput" type="Node" parent="." index="8" unique_id=657701629 node_paths=PackedStringArray("targeting")]
+script = ExtResource("9_5sj0x")
+targeting = NodePath("../SkillTargetingController")

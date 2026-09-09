@@ -57,7 +57,7 @@ func _on_slot_selected(slot: SkillWheelSlot) -> void:
 		
 	print("Skill registered")
 	registered_skill_id = slot.skill_data.id
-	player.player_skill_info["current_skill"] = registered_skill_id
+	player.player_skills.current_skill = registered_skill_id
 	cooldown_timer = SWITCH_COOLDOWN_SEC
 	
 func _on_combat_started() -> void:

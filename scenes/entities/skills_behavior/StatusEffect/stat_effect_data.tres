@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="StatusEffectData" format=3 uid="uid://divgx0eojwtgo"]
+
+[ext_resource type="Script" uid="uid://de8n1yn55gj07" path="res://scenes/entities/skills_behavior/StatusEffect/stat_effect_data.gd" id="1_q71j5"]
+
+[resource]
+script = ExtResource("1_q71j5")

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AOEBehavior" format=3 uid="uid://c2l8d6xf0ctxg"]
+
+[ext_resource type="Script" uid="uid://bcix0g2wksx51" path="res://scenes/entities/skills_behavior/AOE/aoe_behavior.gd" id="1_m5opk"]
+
+[resource]
+script = ExtResource("1_m5opk")
+shape = 1
+metadata/_custom_type_script = "uid://bp8tbm1bsorw1"

@@ -10,7 +10,10 @@ var facing_right := true
 var interact_timer := 0.0
 
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
+@onready var player_skill_input: Node = $PlayerSkillInput
+@onready var skill_targeting: SkillTargetingController = $SkillTargetingController
 
+@export var stat_component: StatComponent
 @export var pause_menu: PauseMenu
 @export var skill_wheel_overlay: CombatSkillOverlay
 @export var trigger_area: PlayerTriggerArea
@@ -34,6 +37,9 @@ func _ready():
 	player_stats.hp = player_stats.max_hp
 	
 	player_skills.player_unlocked_skills.append("0")
+	player_skills.player_unlocked_skills.append("1")
+	player_skills.player_unlocked_skills.append("2")
+	
 	print("SkillID = 0 in Database: ", SkillDatabase.get_skill("0"))
 	print("Active Skill Slots: %d" % player_skills.unlocked_active_slots)
 	print("Passive Skill Slots: %d" % player_skills.unlocked_passive_slots)
@@ -43,17 +49,10 @@ func _ready():
 		cam.set_default_target(focus_point)
 		
 	DialogManager.dialog_finished.connect(_on_dialog_finished)
+	
+	skill_targeting.cast_completed.connect(_on_skill_targeting_completed)
 
 func _physics_process(delta: float) -> void:
-	'''
-	check if player is not on floor
-	get input -> store as vector for direction and magnitude
-	forward should not be global north -> or moving camera would break sense of direction
-	
-	when no input -> wait -> idle animation
-	when moving -> walk
-	when shift + moving -> run
-	'''	
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
 		
@@ -99,12 +98,6 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func _process(delta: float) -> void:
-	'''
-	check if in combat
-	if in combat -> sp regen
-	permanent hp/sp bar visible
-	update hp/sp bars
-	'''
 	if IN_COMBAT:
 		if player_stats.hp < player_stats.max_hp:
 			player_stats.hp = min(player_stats.hp + player_stats.hp_regen_rate * delta, player_stats.max_hp)
@@ -121,20 +114,40 @@ func _process(delta: float) -> void:
 	resource_bar_transition(delta)
 
 func _input(event: InputEvent) -> void:
-	if Input.is_key_pressed(KEY_G):
-		player_stats.xp = min(player_stats.xp + 10, player_stats.max_xp)
-		
-	if Input.is_key_pressed(KEY_1):
-		player_skills.unlocked_active_slots = min(player_skills.unlocked_active_slots + 1, player_skills.MAX_ACTIVE_SLOTS)
-		
-	if Input.is_key_pressed(KEY_2):
-		player_skills.unlocked_passive_slots = min(player_skills.unlocked_passive_slots + 1, player_skills.MAX_PASSIVE_SLOTS)		
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_G:
+				player_stats.xp = min(
+					player_stats.xp + 10,
+					player_stats.max_xp
+				)
+
+			KEY_1:
+				player_skills.unlocked_active_slots = min(
+					player_skills.unlocked_active_slots + 1,
+					player_skills.MAX_ACTIVE_SLOTS
+				)
+
+			KEY_2:
+				player_skills.unlocked_passive_slots = min(
+					player_skills.unlocked_passive_slots + 1,
+					player_skills.MAX_PASSIVE_SLOTS
+				)
+				
+			KEY_F:
+				use_skill(player_skills.current_skill)
+
+func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
+	player_stats.sp -= skill.sp_cost
+	skill_use_timer = skill_use_cd
 	
-	if Input.is_action_pressed("use_skill"):
-		# use skill
-		use_skill(player_skills.current_skill)
-		skill_use_timer = skill_use_cd
+	print("Player used %s!" % skill.display_name)
 	
+	# Combat system / skill behavior goes here
+
+func _on_skill_targeting_completed(skill: SkillData, target_data: Dictionary) -> void:
+	_execute_skill(skill, target_data)
+
 func _on_dialog_finished() -> void:
 	interact_timer = INTERACT_TIMEOUT
 
@@ -160,9 +173,6 @@ func try_to_interact(target: Interactable) -> void:
 	target.interact()
 
 func update_sprite(input_dir: Vector2):
-	'''
-	update sprite animation as needed
-	'''
 	if input_dir.x > 0:
 		facing_right = true
 	elif input_dir.x < 0:
@@ -181,9 +191,6 @@ func update_sprite(input_dir: Vector2):
 		
 		
 func resource_bar_transition(delta: float):
-	'''
-	smooth transition for hp/sp bars
-	'''
 	var target_hp_pct = player_stats.hp / player_stats.max_hp
 	var target_sp_pct = player_stats.sp / player_stats.max_sp
 	
@@ -253,25 +260,32 @@ func equip_core_skill(skill_id: String):
 	
 func use_skill(skill_id: String) -> void:
 	var data: SkillData = SkillDatabase.get_skill(skill_id)
+	
 	if data == null:
 		print("Player has no skill registered")
 		return
-		
+	
 	if player_stats.sp < data.sp_cost:
-		print("SP too low | Cost: %d  Player SP: %d" % [data.sp_cost, player_stats.sp])
+		print("SP too low | Cost: %d  Player SP: %d" % [
+			data.sp_cost,
+			player_stats.sp
+		])
 		return
-		
+	
 	if skill_use_timer > 0.0:
 		print("Skill use on cooldown: %.1f" % skill_use_timer)
 		return
-		
-	player_stats.sp -= data.sp_cost
-	print("Player used %s!" % data.display_name)
+	
+	match data.attack_type:
+		SkillData.AttackType.SKILLSHOT, \
+		SkillData.AttackType.SUREHIT, \
+		SkillData.AttackType.AOE:
+			skill_targeting.start_targeting(data)
+			
+		_:
+			_execute_skill(data)
 
 func resource_bar_visibility():
-	'''
-	resource bar toggle
-	'''
 	$WorldUI/Label3D.visible = IN_COMBAT or is_hovered
 	$WorldUI/ResourceBars.visible = IN_COMBAT or is_hovered
 
@@ -283,15 +297,9 @@ func show_skill_wheel() -> void:
 	skill_wheel_overlay.close()
 
 func update_hp_bar():
-	'''
-	hp transition
-	'''
 	($WorldUI/ResourceBars/HPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_hp_pct)
 
 func update_sp_bar():
-	'''
-	sp transition
-	'''
 	($WorldUI/ResourceBars/SPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_sp_pct)
 
 func request_pause():
