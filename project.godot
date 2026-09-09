@@ -21,6 +21,7 @@ CombatManager="*uid://bcu2ddpvrgfua"
 GameStateManager="*uid://balnfdh2dl80q"
 DialogManager="*uid://b5yqp7n23clwl"
 SkillDatabase="*uid://cp7j54bjse4o1"
+HitboxRegistry="*uid://sv16pmbum5w2"
 
 [display]
 

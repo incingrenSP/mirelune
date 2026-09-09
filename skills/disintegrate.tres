@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://dg36pfew6mq8f" path="res://scenes/entities/skills_behavior/SureHit/surehit_behavior.tres" id="2_dktct"]
 [ext_resource type="Script" uid="uid://dst28oum58hbf" path="res://scripts/SkillData.gd" id="2_upu53"]
 [ext_resource type="Texture2D" uid="uid://bq0x6wftsn80m" path="res://graphics/ui/skill_icon_temp/keyboard_1.png" id="3_1y8e5"]
-[ext_resource type="Script" uid="uid://brcm8brjbsm8h" path="res://scenes/entities/skills_behavior/stat_modifier_entry.gd" id="3_dktct"]
+[ext_resource type="Script" uid="uid://brcm8brjbsm8h" path="res://scenes/entities/stat_modifier_entry.gd" id="3_dktct"]
 
 [resource]
 script = ExtResource("2_upu53")

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://dmd8s8beuvs76"]
 
 [ext_resource type="Script" uid="uid://bmp8gjrd5v8e5" path="res://scenes/entities/entity.gd" id="1_wcjeu"]
+[ext_resource type="PackedScene" uid="uid://bltgfahw4a6dh" path="res://scenes/entities/stat_component.tscn" id="2_366ky"]
 [ext_resource type="Script" uid="uid://b7n6u5b50brhg" path="res://scenes/entities/interaction_area.gd" id="2_o12gi"]
 [ext_resource type="PackedScene" uid="uid://scn1nccsiawq" path="res://scenes/entities/skills_behavior/SkillTargetController/SkillTargetingController.tscn" id="3_7agfi"]
+[ext_resource type="PackedScene" uid="uid://c2pg1pjddhqet" path="res://scenes/entities/hitbox.tscn" id="3_2213q"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ylx48"]
 size = Vector3(1, 1.5, 0.2)
@@ -10,12 +12,13 @@ size = Vector3(1, 1.5, 0.2)
 [sub_resource type="SphereShape3D" id="SphereShape3D_cyk10"]
 radius = 1.0
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_04okd"]
-size = Vector3(1, 1.2, 0.2)
-
 [node name="Entity" type="CharacterBody3D" unique_id=21563850 groups=["clickable"]]
 collision_layer = 2
 script = ExtResource("1_wcjeu")
+
+[node name="StatComponent" parent="." unique_id=571686911 instance=ExtResource("2_366ky")]
+
+[node name="Hitbox" parent="." unique_id=1186791149 instance=ExtResource("3_2213q")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1288580069]
 shape = SubResource("BoxShape3D_ylx48")
@@ -35,13 +38,6 @@ shaded = true
 alpha_cut = 1
 
 [node name="WorldUI" type="Node3D" parent="." unique_id=747760753]
-
-[node name="Hitbox" type="Area3D" parent="." unique_id=1166054964]
-collision_layer = 4
-collision_mask = 4
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" unique_id=84421706]
-shape = SubResource("BoxShape3D_04okd")
 
 [node name="CameraFocusPoint" type="Marker3D" parent="." unique_id=256087317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49209273, 0)
