@@ -25,7 +25,7 @@ var input_locked := false
 
 @export var player_portrait: Texture2D = null
 @export var player_stats: PlayerStats
-@export var player_skills: PlayerSkillInfo
+@export var player_skills: PlayerSkills
 
 var skill_use_cd: float = 0.5
 var skill_use_timer: float = 0.0

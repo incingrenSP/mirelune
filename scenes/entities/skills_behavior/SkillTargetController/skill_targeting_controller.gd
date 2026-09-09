@@ -14,6 +14,7 @@ signal cast_cancelled(skill: SkillData)
 
 @export var caster: Node3D
 @export var stat_component: StatComponent
+@export var exclude_own_faction: bool = true
 
 var state: State = State.IDLE
 var active_skill: SkillData
@@ -26,6 +27,7 @@ var _cast_time_total: float = 0.0
 var _cast_time_remaining: float = 0.0
 
 var _cast_target_data: Dictionary = {}
+var _caster_hitbox: Hitbox
 
 func _ready() -> void:
 	if caster == null:
@@ -33,7 +35,10 @@ func _ready() -> void:
 		
 	if stat_component == null and is_instance_valid(caster):
 		stat_component = caster.get_node_or_null("StatComponent") as StatComponent
-		
+	
+	if is_instance_valid(caster):
+		_caster_hitbox = caster.get_node_or_null("Hitbox") as Hitbox
+	
 	set_process(false)
 	
 func _process(delta: float) -> void:
@@ -87,9 +92,14 @@ func _configure_indicator_for_skill() -> void:
 		SkillData.AttackType.AOE:
 			var behavior := active_skill.behavior
 			
-			if behavior is AOEBehavior and behavior.shape == AOEBehavior.AOEShape.CONE:
-				_indicator.mode = RangeIndicator.Mode.CONE
-				_indicator.cone_angle_degrees = behavior.cone_angle
+			if behavior is AOEBehavior:
+				if behavior.shape == AOEBehavior.AOEShape.CONE:
+					_indicator.mode = RangeIndicator.Mode.CONE
+					_indicator.cone_angle_degrees = behavior.cone_angle
+				
+				elif behavior.shape == AOEBehavior.AOEShape.CIRCLE:
+					_indicator.mode = RangeIndicator.Mode.CIRCLE
+					_indicator.circle_radius = behavior.aoe_radius
 				
 			else:
 				_indicator.mode = RangeIndicator.Mode.RETICLE
@@ -134,6 +144,21 @@ func _recompute_pointer(world_point: Vector3) -> void:
 	_indicator.direction_angle = atan2(local_flat.z, local_flat.x)
 	_indicator.reticle_local_pos = local_flat.limit_length(_indicator.range_radius)
 
+func _resolve_surehit_target() -> Hitbox:
+	var behavior := active_skill.behavior
+	var lock_radius := 1.0
+	
+	if behavior is SureHitBehavior:
+		lock_radius = behavior.lock_on_radius
+		
+	var aim_point := caster.global_position + _last_world_offset
+	var exclude := ""
+	
+	if exclude_own_faction and is_instance_valid(_caster_hitbox):
+		exclude = _caster_hitbox.faction
+		
+	return HitboxRegistry.find_nearest(aim_point, lock_radius, exclude)
+
 func start_targeting(skill: SkillData) -> void:
 	if skill == null:
 		push_warning("SkillTargetingController: SkillData is null")
@@ -151,6 +176,11 @@ func start_targeting(skill: SkillData) -> void:
 	state = State.AIMING
 	
 	_ensure_indicator()
+	
+	_indicator.top_level = false
+	_indicator.position = Vector3.ZERO
+	_indicator.rotation = Vector3.ZERO
+	
 	_configure_indicator_for_skill()
 	
 	_indicator.locked = false
@@ -173,7 +203,16 @@ func confirm() -> void:
 		return
 		
 	_cast_target_data = _build_target_data()
+	
+	if active_skill.attack_type == SkillData.AttackType.SUREHIT:
+		_cast_target_data["target_entity"] = _resolve_surehit_target()
+	
 	state = State.CASTING
+	
+	var yaw := caster.global_rotation.y
+	_indicator.top_level = true
+	_indicator.global_transform = Transform3D(Basis(Vector3.UP, yaw), caster.global_position)
+	
 	_indicator.locked = true
 	_indicator.cast_progress = 0.0
 	_indicator.refresh()

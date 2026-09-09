@@ -11,8 +11,8 @@ extends Control
 @onready var player_level: Label = $NamePanel/PlayerID/PlayerLevel
 
 func update_stats(player: Player) -> void:
-	player_name.text = "%s" % player.player_stats.player_name
-	player_level.text = "Lvl. %s" % player.player_stats.player_level
+	player_name.text = "%s" % player.player_stats.display_name
+	player_level.text = "Lvl. %s" % player.player_stats.level
 	
 	player_portrait.texture = player.player_portrait
 	

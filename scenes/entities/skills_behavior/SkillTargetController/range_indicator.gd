@@ -5,7 +5,8 @@ enum Mode {
 	NONE,			# circle only => Lissandra R
 	DIRECTIONAL,	# circle + arrow pinned to a rotating angle => Kaisa W
 	CONE,			# circle + filled pie slice => Annie W
-	RETICLE			# circle +  a dot clamped inside it => Morgana W
+	CIRCLE,			# circle +  a dot clamped inside it => Morgana W
+	RETICLE			# circle + direct hitbox hit
 }
 
 @export var range_radius: float = 3.0
@@ -26,6 +27,7 @@ enum Mode {
 @export var y_offset: float = 0.02
 @export var line_width: float = 0.08
 @export var arrow_head_length: float = 0.5
+@export var circle_radius: float = 1.0
 
 var _fill_mesh: MeshInstance3D
 var _line_mesh: MeshInstance3D
@@ -89,17 +91,25 @@ func _rebuild_lines(color: Color) -> void:
 	_add_circle_outline(st, Vector3.ZERO, range_radius, 64, line_width * 0.6)
 	
 	st.set_color(color)
+	
 	match mode:
 		Mode.DIRECTIONAL:
 			_add_arrow(st)
+			
 		Mode.CONE:
 			var half := deg_to_rad(cone_angle_degrees) * 0.5
 			var p0 := Vector3(cos(direction_angle - half), 0.0, sin(direction_angle - half)) * range_radius
 			var p1 := Vector3(cos(direction_angle + half), 0.0, sin(direction_angle + half)) * range_radius
+			
 			_add_line_quad(st, Vector3.ZERO, p0, line_width)
 			_add_line_quad(st, Vector3.ZERO, p1, line_width)
+		
+		Mode.CIRCLE:
+			_add_circle_outline(st, reticle_local_pos, circle_radius, 64, line_width * 0.6)
+		
 		Mode.RETICLE:
 			_add_circle_outline(st, reticle_local_pos, 0.25, 24, line_width * 0.6)
+		
 		Mode.NONE:
 			pass
 
@@ -108,10 +118,13 @@ func _rebuild_lines(color: Color) -> void:
 func _add_arrow(st: SurfaceTool) -> void:
 	var fwd := Vector3(cos(direction_angle), 0.0, sin(direction_angle))
 	var to := fwd * range_radius
+	
 	_add_line_quad(st, Vector3.ZERO, to, line_width)
+	
 	var back := -fwd
 	var head_a := to + back.rotated(Vector3.UP, 0.4) * arrow_head_length
 	var head_b := to + back.rotated(Vector3.UP, -0.4) * arrow_head_length
+	
 	_add_line_quad(st, to, head_a, line_width)
 	_add_line_quad(st, to, head_b, line_width)
 
@@ -119,19 +132,25 @@ func _add_circle_outline(st: SurfaceTool, center: Vector3, radius: float, segmen
 	for i in range(segments):
 		var a0 := TAU * float(i) / segments
 		var a1 := TAU * float(i + 1) / segments
+		
 		var p0 := center + Vector3(cos(a0), 0.0, sin(a0)) * radius
 		var p1 := center + Vector3(cos(a1), 0.0, sin(a1)) * radius
+		
 		_add_line_quad(st, p0, p1, width)
 
 func _add_wedge_fill(st: SurfaceTool, center: Vector3, radius: float, angle_start: float, angle_end: float, segments: int) -> void:
 	var top := center + Vector3.UP * y_offset
+	
 	for i in range(segments):
 		var t0 := float(i) / segments
 		var t1 := float(i + 1) / segments
+		
 		var a0 : float = lerp(angle_start, angle_end, t0)
 		var a1 : float = lerp(angle_start, angle_end, t1)
+		
 		var p0 := center + Vector3(cos(a0), 0.0, sin(a0)) * radius + Vector3.UP * y_offset
 		var p1 := center + Vector3(cos(a1), 0.0, sin(a1)) * radius + Vector3.UP * y_offset
+		
 		st.add_vertex(top)
 		st.add_vertex(p0)
 		st.add_vertex(p1)

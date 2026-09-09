@@ -2,13 +2,16 @@ class_name StatModifierEntry
 extends Resource
 
 enum StatType {
-	ATK,			# flat or % modifiers
+	ATK,
 	DEF,
 	ADR,
-	HP_REGEN,		# flat modifiers
+	SPD,
+	MAX_HP,
+	MAX_SP,
+	HP_REGEN,
 	SP_REGEN,
-	XP_MULT,		# % modifiers
-	CAST_SPEED		# % modifiers
+	XP_MULT,
+	CAST_SPEED
 }
 
 enum ModifierType {
@@ -26,10 +29,13 @@ static func to_key(stat: StatType) -> String:
 		StatType.ATK: return "atk"
 		StatType.DEF: return "def"
 		StatType.ADR: return "adr"
-		StatType.HP_REGEN: return "hp_regen_rate"
-		StatType.SP_REGEN: return "sp_regen_rate"
-		StatType.XP_MULT: return "xp_multiplier"
-		StatType.CAST_SPEED: return "cast_time_reduction"
+		StatType.SPD: return "spd"
+		StatType.MAX_HP: return "max_hp"
+		StatType.MAX_SP: return "max_sp"
+		StatType.HP_REGEN: return "hp_regen"
+		StatType.SP_REGEN: return "sp_regen"
+		StatType.XP_MULT: return "xp_mult"
+		StatType.CAST_SPEED: return "cast_speed"
 	
 	return ""
 		

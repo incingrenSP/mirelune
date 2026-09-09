@@ -3,9 +3,9 @@ extends Node
 
 signal stats_changed
 
-@export var base_stats: Dictionary = {}
+@export var entity_stats: EntityStats
+@export var entity_skills: EntitySkills
 
-var _equipped_skills: Array[SkillData] = []
 var _cache: Dictionary = {}
 var _dirty: bool = true
 
@@ -17,12 +17,15 @@ func _recompute() -> void:
 	_cache.clear()
 	
 	for stat_type in StatModifierEntry.StatType.values():
-		var base: float = base_stats.get(stat_type, 0.0)
+		var base: float = get_base_stat(stat_type)
 		var flat_sum := 0.0
 		var percent_additive_sum := 0.0
 		var percent_of_current_sum := 0.0
 		
-		for skill in _equipped_skills:
+		for skill in entity_skills:
+			if not is_instance_valid(skill):
+				continue
+				
 			for mod in skill.stat_modifiers:
 				if mod.stat != stat_type:
 					continue
@@ -56,28 +59,38 @@ func equip_skill(skill: SkillData) -> void:
 	if skill.category == SkillData.SkillCategory.ACTIVE:
 		return
 	
-	if _equipped_skills.has(skill):
+	if entity_skills.equipped_passive_skills.has(skill):
 		return
 		
-	_equipped_skills.append(skill)
+	entity_skills.equipped_passive_skills.append(skill)
 	_mark_dirty()
 	
 func unequip_skill(skill: SkillData) -> void:
-	if _equipped_skills.has(skill):
-		_equipped_skills.erase(skill)
+	if entity_skills.has(skill):
+		entity_skills.erase(skill)
 		_mark_dirty()
 	
-func set_base_stat(stat: int, value: float) -> void:
-	base_stats[stat] = value
-	_mark_dirty()
-	
 func get_base_stat(stat: int) -> float:
-	return base_stats.get(stat, 0.0)
+	if not is_instance_valid(entity_stats):
+		return 0.0
+		
+	match stat:
+		StatModifierEntry.StatType.ATK: return entity_stats.atk
+		StatModifierEntry.StatType.DEF: return entity_stats.def
+		StatModifierEntry.StatType.ADR: return entity_stats.adr
+		StatModifierEntry.StatType.SPD: return entity_stats.spd
+		StatModifierEntry.StatType.MAX_HP: return entity_stats.max_hp
+		StatModifierEntry.StatType.MAX_SP: return entity_stats.max_sp
+		StatModifierEntry.StatType.HP_REGEN: return entity_stats.hp_regen_rate
+		StatModifierEntry.StatType.SP_REGEN: return entity_stats.sp_regen_rate
+		StatModifierEntry.StatType.XP_MULT: return entity_stats.xp_multiplier
+		StatModifierEntry.StatType.CAST_SPEED: return entity_stats.cast_speed
+	return 0.0
 	
 func get_stat(stat: int) -> float:
 	if _dirty:
 		_recompute()
-	return _cache.get(stat, base_stats.get(stat, 0.0))
+	return _cache.get(stat, get_base_stat(stat))
 	
 func get_stats_as_formula_dict() -> Dictionary:
 	if _dirty:
@@ -87,15 +100,32 @@ func get_stats_as_formula_dict() -> Dictionary:
 	
 	for stat_type in StatModifierEntry.StatType.values():
 		var key: String = StatModifierEntry.to_key(stat_type)
+		
 		if not key.is_empty():
 			out[key] = get_stat(stat_type)
 	
 	return out
 	
 func has_flag(flag: int) -> bool:
-	for skill in _equipped_skills:
-		if skill.has_flag(flag):
+	if not is_instance_valid(entity_skills):
+		return false
+		
+	for skill in entity_skills:
+		if is_instance_valid(skill) and skill.has_flag(flag):
 			return true
 			
 	return false
+	
+func set_current_hp(value: float) -> void:
+	if not is_instance_valid(entity_stats):
+		return
+	entity_stats.hp = clamp(value, 0.0, get_stat(StatModifierEntry.StatType.MAX_HP))
+
+func get_current_sp() -> float:
+	return entity_stats.sp if is_instance_valid(entity_stats) else 0.0
+
+func set_current_sp(value: float) -> void:
+	if not is_instance_valid(entity_stats):
+		return
+	entity_stats.sp = clamp(value, 0.0, get_stat(StatModifierEntry.StatType.MAX_SP))
 	

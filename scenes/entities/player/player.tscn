@@ -353,3 +353,6 @@ shape = SubResource("SphereShape3D_gkrjc")
 [node name="PlayerSkillInput" type="Node" parent="." index="8" unique_id=657701629 node_paths=PackedStringArray("targeting")]
 script = ExtResource("9_5sj0x")
 targeting = NodePath("../SkillTargetingController")
+
+[node name="SkillTargetingController" parent="." index="9" unique_id=60548542]
+exclude_own_faction = null
