@@ -12,6 +12,9 @@ extends Node3D
 @export var follow_speed := 5.0
 @export var rotation_speed := 90.0
 
+# long-range skill portion
+@export var skill_distance: float = 12.0
+
 var default_target: Marker3D
 var focus_target: Marker3D
 

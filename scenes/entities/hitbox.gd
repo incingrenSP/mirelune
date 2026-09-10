@@ -15,6 +15,12 @@ func _ready() -> void:
 			
 	HitboxRegistry.register(self)
 	
+	mouse_entered.connect(_on_mouse_entered)
+	
+func _on_mouse_entered() -> void:
+	var parent := get_parent()
+	print("%s hitbox hovered | Hitbox : %s" % [parent, self])
+	
 func _exit_tree() -> void:
 	HitboxRegistry.unregister(self)
 	

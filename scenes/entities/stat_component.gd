@@ -31,7 +31,7 @@ func _recompute() -> void:
 		var percent_additive_sum := 0.0
 		var percent_of_current_sum := 0.0
 		
-		for skill in entity_skills:
+		for skill in modifier_skills:
 			if not is_instance_valid(skill):
 				continue
 				

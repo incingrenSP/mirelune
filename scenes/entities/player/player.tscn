@@ -3,7 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://dmd8s8beuvs76" path="res://scenes/entities/entity.tscn" id="1_1hmtu"]
 [ext_resource type="Script" uid="uid://di7uhcdr1rf8k" path="res://scenes/entities/player/player.gd" id="2_bjvvg"]
 [ext_resource type="Script" uid="uid://da84bocgwqmdy" path="res://scenes/entities/player/player_interaction.gd" id="3_1murt"]
+[ext_resource type="Resource" uid="uid://b6fh7u3tcfjnv" path="res://scenes/entities/player/player_stats.tres" id="3_70kwc"]
 [ext_resource type="Texture2D" uid="uid://bb322a2prnght" path="res://graphics/characters/player/player_charge_template-Sheet.png" id="4_5sj0x"]
+[ext_resource type="Resource" uid="uid://b0e70yk1frlle" path="res://scenes/entities/player/player_skills.tres" id="4_yywfu"]
 [ext_resource type="Texture2D" uid="uid://b7n44dsqcoq51" path="res://graphics/characters/player/player_heavy_hit_template-Sheet.png" id="5_j0oqr"]
 [ext_resource type="Texture2D" uid="uid://bod8liy8gitry" path="res://graphics/characters/player/player_template-Sheet.png" id="5_ovg4i"]
 [ext_resource type="Texture2D" uid="uid://c71bv8i02njqt" path="res://graphics/characters/player/player_run_template-Sheet.png" id="6_7wli1"]
@@ -651,8 +653,13 @@ player_portrait = null
 player_stats = null
 player_skills = null
 
+[node name="StatComponent" parent="." index="0" unique_id=571686911]
+entity_stats = ExtResource("3_70kwc")
+entity_skills = ExtResource("4_yywfu")
+
 [node name="Hitbox" parent="." index="1" unique_id=1186791149]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35410947, 0)
+faction = "player"
 
 [node name="InteractionArea" parent="." index="3" unique_id=17577018 node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33126366, 0)

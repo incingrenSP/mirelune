@@ -4,6 +4,8 @@ extends Entity
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 @onready var patrol_boundary: Area3D = $PatrolZone
+@onready var stat_component: StatComponent = $StatComponent
+@onready var hitbox: Hitbox = $Hitbox
 
 @export var routine_enabled := true
 @export var wait_time := 1.0
@@ -302,6 +304,7 @@ func enter_combat():
 	
 	IN_COMBAT = true
 	resource_bar_visibility()
+	$InteractionArea.visible = false
 	
 	CombatManager.enter_combat(self)
 	active_state = ENEMY_STATES_ACTIVE.CHASE
@@ -312,6 +315,7 @@ func exit_combat():
 		
 	IN_COMBAT = false
 	resource_bar_visibility()
+	$InteractionArea.visible = true
 	
 	CombatManager.exit_combat(self)
 	enter_watch(5.0, true)

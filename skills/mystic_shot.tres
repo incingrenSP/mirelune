@@ -15,6 +15,6 @@ icon = ExtResource("1_5ou0n")
 sp_cost = 20
 damage_formula = "atk"
 range_value = 5.0
-cast_time = 3.0
+cast_time = 0.8
 behavior = ExtResource("2_fnkb2")
 metadata/_custom_type_script = "uid://dst28oum58hbf"

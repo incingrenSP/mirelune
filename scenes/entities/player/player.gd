@@ -22,7 +22,10 @@ var interact_timer := 0.0
 @onready var player_skill_input: Node = $PlayerSkillInput
 @onready var skill_targeting: SkillTargetingController = $SkillTargetingController
 
-#@export var stat_component: StatComponent
+@onready var stat_component: StatComponent = $StatComponent
+
+@onready var hitbox: Hitbox = $Hitbox
+
 @export var pause_menu: PauseMenu
 @export var skill_wheel_overlay: CombatSkillOverlay
 @export var trigger_area: PlayerTriggerArea
@@ -48,6 +51,7 @@ signal skills_changed
 func _ready():
 	print("===PLAYER.gd READY===")
 	player_stats.hp = player_stats.max_hp
+	hitbox.faction = "player"
 	
 	player_skills.player_unlocked_skills.append("0")
 	player_skills.player_unlocked_skills.append("1")
@@ -222,6 +226,17 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	print("Player used %s!" % skill.display_name)
 		
 	# Combat system / skill behavior goes here
+	if skill.attack_type == SkillData.AttackType.SUREHIT:
+		print("SUREHIT skill confirmed")
+		var target: Hitbox = target_data.get("target_entity", null)
+		
+		if is_instance_valid(target):
+			print("valid target confirmed")
+			var dmg := target.receive_hit(self, skill, target_data)
+			print(">>> Hit %s for %.1f damage" % [target.get_parent().name, dmg])
+		
+		else:
+			print(">>> SUREHIT found nothing near the reticle: %s" % target_data.get("target_point"))
 
 func try_to_interact(target: Interactable) -> void:
 	print("========================================")
@@ -290,6 +305,7 @@ func update_sprite(input_dir: Vector2) -> void:
 	
 func set_combat_state(value: bool):
 	IN_COMBAT = value
+	$InteractionArea.visible = !value
 	
 	show_skill_wheel()
 	resource_bar_visibility()

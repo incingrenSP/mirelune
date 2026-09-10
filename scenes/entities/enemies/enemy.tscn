@@ -3,7 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://dmd8s8beuvs76" path="res://scenes/entities/entity.tscn" id="1_yfmsl"]
 [ext_resource type="Script" uid="uid://dyylqjwyfi21h" path="res://scenes/entities/enemies/enemy_interaction.gd" id="2_20lqd"]
 [ext_resource type="Script" uid="uid://d126qspia85lc" path="res://scenes/entities/enemies/enemy.gd" id="2_j3iiu"]
+[ext_resource type="Resource" uid="uid://cwq6m8chfk3rh" path="res://scenes/entities/entity_stats.tres" id="3_27tcs"]
 [ext_resource type="Texture2D" uid="uid://djmbo7qba0lc8" path="res://graphics/characters/enemy/Attack_KG_1.png" id="4_fu215"]
+[ext_resource type="Resource" uid="uid://wrwq5dl33mxh" path="res://scenes/entities/entity_skills.tres" id="4_mag4a"]
 [ext_resource type="Texture2D" uid="uid://cl3ijof3t8tba" path="res://graphics/characters/enemy/Attack_KG_2.png" id="5_27tcs"]
 [ext_resource type="Texture2D" uid="uid://dye2osu4kv180" path="res://graphics/characters/enemy/Attack_KG_3.png" id="6_mag4a"]
 [ext_resource type="Texture2D" uid="uid://c4xf6ev8mbl6c" path="res://graphics/characters/enemy/Attack_KG_4.png" id="7_0kssi"]
@@ -420,6 +422,13 @@ wait_time = 5.0
 IN_COMBAT = false
 attack_duration = 0.5
 attack_cooldown = 1.0
+
+[node name="StatComponent" parent="." index="0" unique_id=571686911]
+entity_stats = ExtResource("3_27tcs")
+entity_skills = ExtResource("4_mag4a")
+
+[node name="Hitbox" parent="." index="1" unique_id=1186791149]
+faction = "enemy"
 
 [node name="InteractionArea" parent="." index="3" unique_id=17577018 node_paths=PackedStringArray("enemy")]
 script = ExtResource("2_20lqd")

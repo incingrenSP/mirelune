@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="EntitySkills" format=3 uid="uid://wrwq5dl33mxh"]
+
+[ext_resource type="Script" uid="uid://b2e42tfjjyb1i" path="res://scenes/entities/entity_skills.gd" id="1_4o6h8"]
+
+[resource]
+script = ExtResource("1_4o6h8")
+metadata/_custom_type_script = "uid://b2e42tfjjyb1i"

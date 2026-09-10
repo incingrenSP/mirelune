@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1_h31xi")
+lock_on_radius = 10.0
 metadata/_custom_type_script = "uid://bp8tbm1bsorw1"

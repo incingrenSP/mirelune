@@ -1,10 +1,15 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://d1xbmdh3f0sx7"]
 
 [ext_resource type="Script" uid="uid://cot8277r08toc" path="res://scenes/entities/skills_behavior/status_application.gd" id="1_y8oe6"]
-[ext_resource type="Resource" uid="uid://dg36pfew6mq8f" path="res://scenes/entities/skills_behavior/SureHit/surehit_behavior.tres" id="2_dktct"]
+[ext_resource type="Script" uid="uid://c5elm526ps78k" path="res://scenes/entities/skills_behavior/SureHit/surehit_behavior.gd" id="2_dktct"]
 [ext_resource type="Script" uid="uid://dst28oum58hbf" path="res://scripts/SkillData.gd" id="2_upu53"]
 [ext_resource type="Texture2D" uid="uid://bq0x6wftsn80m" path="res://graphics/ui/skill_icon_temp/keyboard_1.png" id="3_1y8e5"]
 [ext_resource type="Script" uid="uid://brcm8brjbsm8h" path="res://scenes/entities/stat_modifier_entry.gd" id="3_dktct"]
+
+[sub_resource type="Resource" id="Resource_1y8e5"]
+script = ExtResource("2_dktct")
+lock_on_radius = 10.0
+metadata/_custom_type_script = "uid://bp8tbm1bsorw1"
 
 [resource]
 script = ExtResource("2_upu53")
@@ -17,6 +22,6 @@ damage_scaling = "ADR"
 damage_formula = "adr"
 attack_type = 1
 range_value = 3.0
-cast_time = 2.5
-behavior = ExtResource("2_dktct")
+cast_time = 0.25
+behavior = SubResource("Resource_1y8e5")
 metadata/_custom_type_script = "uid://dst28oum58hbf"

@@ -18,18 +18,6 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	set_hovered(false)
 	
-func set_hovered(value: bool):
-	if GameStateManager.is_dialog_active():
-		return
-	'''
-	send signal to set resource bar toggle to visible temporarily if not in combat
-	'''
-	hovered = value
-	if enemy:
-		print("Enemy detected!")
-		enemy.is_hovered = value
-		enemy.resource_bar_visibility()
-	
 func _on_input_event(
 	camera, event, position, normal, shape_idx
 ):
@@ -41,6 +29,16 @@ func _on_input_event(
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and !GameStateManager.is_dialog_active():
 			if event.pressed:
-				print("Enemy took 20 damage")
-				enemy.hp -= 20
 				print("Enemy currently has ", enemy.hp, "HP")
+
+func set_hovered(value: bool):
+	if GameStateManager.is_dialog_active():
+		return
+	'''
+	send signal to set resource bar toggle to visible temporarily if not in combat
+	'''
+	hovered = value
+	if enemy:
+		print("Enemy detected!")
+		enemy.is_hovered = value
+		enemy.resource_bar_visibility()
