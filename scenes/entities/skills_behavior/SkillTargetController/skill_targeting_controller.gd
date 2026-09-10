@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
 	
 func _complete_cast() -> void:
 	var skill := active_skill
-	var target_data := _cast_target_data
+	var target_data := _cast_target_data.duplicate(true)
 	
 	_reset_state()
 	

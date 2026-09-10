@@ -177,6 +177,8 @@ func _on_skill_cast_started(skill: SkillData, target: Dictionary) -> void:
 func _on_skill_cast_completed(skill: SkillData, target: Dictionary) -> void:
 	# check if animation completed => movement locked until it is
 	# after animation ends => can move
+	print("CAST COMPLETED TARGET DATA = ", target)
+	
 	movement_locked = true
 	casting_state = false
 	attack = true
@@ -220,6 +222,8 @@ func _get_skill_animation(skill: SkillData) -> AnimType:
 func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	player_stats.sp -= skill.sp_cost
 	skill_use_timer = skill_use_cd
+	
+	print("EXECUTE TARGET DATA = ", target_data)
 	
 	anim = _get_skill_animation(skill)
 	
