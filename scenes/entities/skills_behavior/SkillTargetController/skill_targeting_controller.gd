@@ -8,6 +8,7 @@ enum State {
 }
 
 signal aim_updated(skill: SkillData, target_data: Dictionary)
+signal targeting_started(skill: SkillData)
 signal cast_started(skill: SkillData, target_data: Dictionary)
 signal cast_completed(skill: SkillData, target_data: Dictionary)
 signal cast_cancelled(skill: SkillData)
@@ -189,6 +190,8 @@ func start_targeting(skill: SkillData) -> void:
 	_configure_indicator_for_skill()
 	
 	_indicator.visible = true
+	
+	targeting_started.emit(active_skill)
 	
 	var facing := -caster.global_transform.basis.z
 	update_aim(caster.global_position + facing)

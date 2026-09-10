@@ -17,9 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-CombatManager="*uid://bcu2ddpvrgfua"
 GameStateManager="*uid://balnfdh2dl80q"
 DialogManager="*uid://b5yqp7n23clwl"
+CombatManager="*uid://bcu2ddpvrgfua"
 SkillDatabase="*uid://cp7j54bjse4o1"
 HitboxRegistry="*uid://sv16pmbum5w2"
 

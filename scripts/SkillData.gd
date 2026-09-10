@@ -44,7 +44,7 @@ enum SkillFlag {
 @export var flags: Array[SkillFlag] = []
 
 # Implement skill interest stuff after properly designing enemy/loot systems
-#@export var skill_interest: float = 0.0
+#@export var skill_interest: float = 0.0	
 
 func calculate_damage(caster_stats: Dictionary, target_stats: Dictionary) -> float:
 	var expr := Expression.new()

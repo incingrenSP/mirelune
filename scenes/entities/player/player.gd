@@ -1,6 +1,12 @@
 class_name Player
 extends Entity
 
+enum AnimType {
+	LIGHT,
+	STRONG,
+	HEAVY
+}
+
 const WALK_SPEED = 4.0
 const RUN_SPEED = 10.0
 const GRAVITY = 18.0
@@ -24,7 +30,10 @@ var interact_timer := 0.0
 @export var camera : Node3D
 
 var is_hovered := false
-var input_locked := false
+
+var movement_locked := false
+var casting_state := false
+var attack := false
 
 @export var player_portrait: Texture2D = null
 @export var player_stats: PlayerStats
@@ -32,6 +41,7 @@ var input_locked := false
 
 var skill_use_cd: float = 0.5
 var skill_use_timer: float = 0.0
+var anim: AnimType = AnimType.LIGHT
 
 signal skills_changed
 
@@ -52,20 +62,22 @@ func _ready():
 		
 	DialogManager.dialog_finished.connect(_on_dialog_finished)
 	
-	skill_targeting.cast_completed.connect(_on_skill_targeting_completed)
+	skill_targeting.targeting_started.connect(_on_targeting_started)
+	skill_targeting.cast_started.connect(_on_skill_cast_started)
+	skill_targeting.cast_completed.connect(_on_skill_cast_completed)
+	skill_targeting.cast_cancelled.connect(_on_skill_cast_cancelled)
+	
+	sprite.animation_finished.connect(_on_animation_finished)
+
 
 func _physics_process(delta: float) -> void:
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
-		
-	if GameStateManager.is_dialog_active():
-		input_locked = true
-		
-	else:
-		input_locked = false
+	
+	var can_move := not movement_locked and not GameStateManager.is_dialog_active()
 		
 	var input_dir = Vector2.ZERO
-	if !input_locked:
+	if can_move:
 		input_dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 			Input.get_action_strength("move_forward") - Input.get_action_strength("move_backward")
@@ -139,19 +151,77 @@ func _input(event: InputEvent) -> void:
 			KEY_F:
 				use_skill(player_skills.current_skill)
 
+func _on_targeting_started(skill: SkillData) -> void:
+	# target start => play casting animation => can move
+	movement_locked = false
+	casting_state = true
+	attack = false
+	
+	update_sprite(Vector2.ZERO)
+	
+func _on_skill_cast_started(skill: SkillData, target: Dictionary) -> void:
+	# casting start => casting progress ui begins
+	# movement locked => play attack animation
+	# execute attack
+	
+	movement_locked = true
+	casting_state = true
+	attack = true
+	
+	update_sprite(Vector2.ZERO)
+	
+func _on_skill_cast_completed(skill: SkillData, target: Dictionary) -> void:
+	# check if animation completed => movement locked until it is
+	# after animation ends => can move
+	movement_locked = true
+	casting_state = false
+	attack = true
+	
+	_execute_skill(skill, target)
+	update_sprite(Vector2.ZERO)
+	
+func _on_skill_cast_cancelled(skill:SkillData) -> void:
+	# cancel casting animation
+	# can move
+	movement_locked = false
+	casting_state = false
+	attack = false
+	
+	update_sprite(Vector2.ZERO)
+
+func _on_animation_finished() -> void:
+	if not attack:
+		return
+		
+	if attack:
+		movement_locked = false
+		casting_state = false
+		attack = false
+		
+		update_sprite(Vector2.ZERO)
+
+func _on_dialog_finished() -> void:
+	interact_timer = INTERACT_TIMEOUT
+
+func _get_skill_animation(skill: SkillData) -> AnimType:
+	if skill.cast_time >= 1.5:
+		return AnimType.HEAVY
+		
+	elif skill.cast_time  >= 0.75:
+		return AnimType.STRONG
+		
+	else:
+		return AnimType.LIGHT
+
 func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	player_stats.sp -= skill.sp_cost
 	skill_use_timer = skill_use_cd
 	
-	print("Player used %s!" % skill.display_name)
+	anim = _get_skill_animation(skill)
 	
+	print("Player used %s!" % skill.display_name)
+		
 	# Combat system / skill behavior goes here
-
-func _on_skill_targeting_completed(skill: SkillData, target_data: Dictionary) -> void:
-	_execute_skill(skill, target_data)
-
-func _on_dialog_finished() -> void:
-	interact_timer = INTERACT_TIMEOUT
 
 func try_to_interact(target: Interactable) -> void:
 	print("========================================")
@@ -174,20 +244,47 @@ func try_to_interact(target: Interactable) -> void:
 	print(">>> TARGET IS IN PLAYER RANGE")
 	target.interact()
 
-func update_sprite(input_dir: Vector2):
+func update_sprite(input_dir: Vector2) -> void:
 	if input_dir.x > 0:
 		facing_right = true
+		
 	elif input_dir.x < 0:
 		facing_right = false
-		
+
 	sprite.flip_h = !facing_right
-	
-	var moving = input_dir != Vector2.ZERO
-	if moving:
+
+	# Special animations with prio
+	if casting_state:
+		if sprite.animation != "casting":
+			sprite.play("casting")
+		return
+
+	if attack:
+		var animation_name := ""
+
+		match anim:
+			AnimType.LIGHT:
+				animation_name = "light_skill"
+				
+			AnimType.STRONG:
+				animation_name = "strong_skill"
+				
+			AnimType.HEAVY:
+				animation_name = "heavy_skill"
+
+		if sprite.animation != animation_name:
+			sprite.play(animation_name)
+
+		return
+
+	# Normal movement animations
+	if input_dir != Vector2.ZERO:
 		if Input.is_action_pressed("run"):
 			sprite.play("run")
+			
 		else:
 			sprite.play("walk")
+			
 	else:
 		sprite.play("idle")
 	
@@ -246,6 +343,10 @@ func use_skill(skill_id: String) -> void:
 	
 	if data == null:
 		print("Player has no skill registered")
+		return
+		
+	if not IN_COMBAT:
+		print("Cannot use Active Skill outside combat")
 		return
 	
 	if player_stats.sp < data.sp_cost:
