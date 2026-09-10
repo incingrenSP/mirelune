@@ -7,12 +7,20 @@
 [ext_resource type="Texture2D" uid="uid://djmbo7qba0lc8" path="res://graphics/characters/enemy/Attack_KG_1.png" id="4_fu215"]
 [ext_resource type="Resource" uid="uid://wrwq5dl33mxh" path="res://scenes/entities/entity_skills.tres" id="4_mag4a"]
 [ext_resource type="Texture2D" uid="uid://cl3ijof3t8tba" path="res://graphics/characters/enemy/Attack_KG_2.png" id="5_27tcs"]
+[ext_resource type="Script" uid="uid://bcnhrikf6lmye" path="res://scenes/entities/entity_stats.gd" id="5_mag4a"]
 [ext_resource type="Texture2D" uid="uid://dye2osu4kv180" path="res://graphics/characters/enemy/Attack_KG_3.png" id="6_mag4a"]
 [ext_resource type="Texture2D" uid="uid://c4xf6ev8mbl6c" path="res://graphics/characters/enemy/Attack_KG_4.png" id="7_0kssi"]
 [ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="7_j3iiu"]
 [ext_resource type="Texture2D" uid="uid://bw6h8knxmf1yu" path="res://graphics/characters/enemy/Idle_Active.png" id="8_ljcf0"]
 [ext_resource type="Texture2D" uid="uid://c52dlderfkuj6" path="res://graphics/characters/enemy/Walking_Active.png" id="10_jokyc"]
 [ext_resource type="Texture2D" uid="uid://ycro61csyeey" path="res://graphics/characters/enemy/Walking_Passive.png" id="11_k75k7"]
+
+[sub_resource type="Resource" id="Resource_mag4a"]
+script = ExtResource("5_mag4a")
+display_name = "Ememiny"
+hp = 100.0
+sp = 50.0
+metadata/_custom_type_script = "uid://bcnhrikf6lmye"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_45afl"]
 atlas = ExtResource("4_fu215")
@@ -373,19 +381,19 @@ billboard_mode = 2
 material = SubResource("StandardMaterial3D_ylx48")
 size = Vector2(1, 0.1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ebyv3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_elvi8"]
 render_priority = 0
 shader = ExtResource("7_j3iiu")
 shader_parameter/fill_amount = 1.0
-shader_parameter/bar_color = Color(0, 1, 0, 1)
+shader_parameter/bar_color = Color(3.465414e-06, 0.70810264, 0.27627248, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bii57"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebyv3"]
 shading_mode = 0
-albedo_color = Color(0, 0.49019608, 0, 1)
+albedo_color = Color(0, 0.6748245, 0.19364974, 1)
 billboard_mode = 2
 
-[sub_resource type="QuadMesh" id="QuadMesh_uu37f"]
-material = SubResource("StandardMaterial3D_bii57")
+[sub_resource type="QuadMesh" id="QuadMesh_gkrjc"]
+material = SubResource("StandardMaterial3D_ebyv3")
 size = Vector2(1, 0.1)
 center_offset = Vector3(0, 0, 0.01)
 
@@ -405,18 +413,66 @@ shader = ExtResource("7_j3iiu")
 shader_parameter/fill_amount = 0.0
 shader_parameter/bar_color = Color(1, 0.67058825, 0, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wyqsp"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_04okd"]
 shading_mode = 0
 albedo_color = Color(1, 0.6392157, 0, 1)
 billboard_mode = 2
 
-[sub_resource type="QuadMesh" id="QuadMesh_w6k81"]
-material = SubResource("StandardMaterial3D_wyqsp")
+[sub_resource type="QuadMesh" id="QuadMesh_2mmct"]
+material = SubResource("StandardMaterial3D_04okd")
 size = Vector2(0.75, 0.1)
 center_offset = Vector3(-0.125, -0.12, 0.01)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_elvi8"]
+shading_mode = 0
+albedo_color = Color(0.31135654, 0.31135657, 0.31135654, 1)
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_04okd"]
+material = SubResource("StandardMaterial3D_elvi8")
+size = Vector2(1, 0.075)
+
+[sub_resource type="Shader" id="Shader_elvi8"]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform float fill_amount: hint_range(0.0, 1.0) = 1.0;
+uniform vec4 bar_color: source_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+void vertex() {
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+			vec4(normalize(cross(vec3(0.0, 1.0, 0.0), MAIN_CAM_INV_VIEW_MATRIX[2].xyz)), 0.0),
+			vec4(0.0, 1.0, 0.0, 0.0),
+			vec4(normalize(cross(MAIN_CAM_INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0),
+			MODEL_MATRIX[3]);
+}
+
+void fragment() {
+	if (UV.x > fill_amount) {
+		discard;
+	}
+	ALBEDO = bar_color.rgb;
+	ALPHA = bar_color.a;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rutlk"]
+render_priority = 0
+shader = SubResource("Shader_elvi8")
+shader_parameter/fill_amount = 0.0
+shader_parameter/bar_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0o1"]
+shading_mode = 0
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_aqy0s"]
+material = SubResource("StandardMaterial3D_mc0o1")
+size = Vector2(1, 0.075)
+
 [node name="Enemy" unique_id=21563850 groups=["enemy"] instance=ExtResource("1_yfmsl")]
 script = ExtResource("2_j3iiu")
+enemy_stats = ExtResource("3_27tcs")
+enemy_skills = ExtResource("4_mag4a")
 routine_enabled = true
 wait_time = 5.0
 IN_COMBAT = false
@@ -424,7 +480,7 @@ attack_duration = 0.5
 attack_cooldown = 1.0
 
 [node name="StatComponent" parent="." index="0" unique_id=571686911]
-entity_stats = ExtResource("3_27tcs")
+entity_stats = SubResource("Resource_mag4a")
 entity_skills = ExtResource("4_mag4a")
 
 [node name="Hitbox" parent="." index="1" unique_id=1186791149]
@@ -449,23 +505,37 @@ shape = SubResource("SphereShape3D_5qbgb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 
 [node name="ResourceBars" type="Node3D" parent="WorldUI" index="0" unique_id=2084622745]
+
+[node name="HPSPBars" type="Node3D" parent="WorldUI/ResourceBars" index="0" unique_id=530876543]
 visible = false
 
-[node name="HPBarBG" type="MeshInstance3D" parent="WorldUI/ResourceBars" index="0" unique_id=1374022975]
+[node name="HPBarBG" type="MeshInstance3D" parent="WorldUI/ResourceBars/HPSPBars" index="0" unique_id=1374022975]
 mesh = SubResource("QuadMesh_5qbgb")
 
-[node name="HPBarFG" type="MeshInstance3D" parent="WorldUI/ResourceBars" index="1" unique_id=546679492]
-material_override = SubResource("ShaderMaterial_ebyv3")
+[node name="HPBarFG" type="MeshInstance3D" parent="WorldUI/ResourceBars/HPSPBars" index="1" unique_id=546679492]
+material_override = SubResource("ShaderMaterial_elvi8")
 cast_shadow = 0
-mesh = SubResource("QuadMesh_uu37f")
+mesh = SubResource("QuadMesh_gkrjc")
 
-[node name="SPBarBG" type="MeshInstance3D" parent="WorldUI/ResourceBars" index="2" unique_id=1059477668]
+[node name="SPBarBG" type="MeshInstance3D" parent="WorldUI/ResourceBars/HPSPBars" index="2" unique_id=1059477668]
 mesh = SubResource("QuadMesh_ylx48")
 
-[node name="SPBarFG" type="MeshInstance3D" parent="WorldUI/ResourceBars" index="3" unique_id=729302711]
+[node name="SPBarFG" type="MeshInstance3D" parent="WorldUI/ResourceBars/HPSPBars" index="3" unique_id=729302711]
 material_override = SubResource("ShaderMaterial_mc0o1")
 cast_shadow = 0
-mesh = SubResource("QuadMesh_w6k81")
+mesh = SubResource("QuadMesh_2mmct")
+
+[node name="CastingUI" type="Node3D" parent="WorldUI/ResourceBars" index="1" unique_id=1443216878]
+visible = false
+
+[node name="CastProgressBG" type="MeshInstance3D" parent="WorldUI/ResourceBars/CastingUI" index="0" unique_id=2074465522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.10308033, 0)
+mesh = SubResource("QuadMesh_04okd")
+
+[node name="CastProgressFG" type="MeshInstance3D" parent="WorldUI/ResourceBars/CastingUI" index="1" unique_id=58032447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.103, 0)
+material_override = SubResource("ShaderMaterial_rutlk")
+mesh = SubResource("QuadMesh_aqy0s")
 
 [node name="Label3D" type="Label3D" parent="WorldUI" index="1" unique_id=1758313167]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)

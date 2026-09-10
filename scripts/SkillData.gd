@@ -47,25 +47,35 @@ enum SkillFlag {
 #@export var skill_interest: float = 0.0	
 
 func calculate_damage(caster_stats: Dictionary, target_stats: Dictionary) -> float:
-	var expr := Expression.new()
-	var vars := []
-	var vals := []
+	if damage_formula.is_empty():
+		return 0.0
+	
+	var vars: PackedStringArray = []
+	var vals: Array = []
 	
 	for key in caster_stats.keys():
-		vars.append("target_" + key)
-		vars.append(target_stats[key])
+		vars.append(str(key))
+		vals.append(caster_stats[key])
 		
+	for key in target_stats.keys():
+		vars.append("target_" + key)
+		vals.append(target_stats[key])
+	
+	var expr := Expression.new()
 	var err := expr.parse(damage_formula, PackedStringArray(vars))
 	
 	if err != OK:
 		push_error("Bad formula in %s: %s" % [id, expr.get_error_text()])
 		return 0.0
-		
+	
+	print("Expr Vars: %s | Expr Vals: %s" % [vars, vals])
+	
 	var result = expr.execute(vals)
 	if expr.has_execute_failed():
-		push_error("Formula execution failed for %s" % id)
+		push_error("SkillData '%s': damage_formula execution failed" % id)
+		return 0.0
 		
-	return result
+	return float(result)
 
 func has_flag(flag: SkillFlag) -> bool:
 	return flags.has(flag)

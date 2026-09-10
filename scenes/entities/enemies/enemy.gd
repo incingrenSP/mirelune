@@ -4,8 +4,12 @@ extends Entity
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 @onready var patrol_boundary: Area3D = $PatrolZone
+
 @onready var stat_component: StatComponent = $StatComponent
 @onready var hitbox: Hitbox = $Hitbox
+
+@export var enemy_stats: EntityStats
+@export var enemy_skills: EntitySkills
 
 @export var routine_enabled := true
 @export var wait_time := 1.0
@@ -27,15 +31,6 @@ var PATROL_RADIUS : float
 var DETECTION_RADIUS : float
 var INVESTIGATION_RADIUS : float
 var ENGAGE_RADIUS : float
-
-var max_hp: float = 100.0
-var hp: float:
-	set(value):
-		hp = clamp(value, 0.0, max_hp)
-var max_sp := 100.0
-var sp := 0.0
-var sp_regen_percent := 0.01
-var hp_regen_percent := 0.05
 
 var move_target: Vector3
 var spawn_position : Vector3
@@ -65,20 +60,14 @@ var watch_timer := 0.0
 var watch_duration := 0.0
 
 func _ready():
-	'''
-	get collision shape from patrol zone to extract patrol radius from it
-	set spawn_position instead of using global_position
-	patrol radius should be fixed so if global_position is used, patrol radius will change
-	if enemy is not in combat keep randomly moving around patrol range
-	'''
 	sprite.scale = Vector3(2, 2, 2)
 	
-	var hp_bar = $WorldUI/ResourceBars/HPBarFG
-	var sp_bar = $WorldUI/ResourceBars/SPBarFG
+	var hp_bar = $WorldUI/ResourceBars/HPSPBars/HPBarFG
+	var sp_bar = $WorldUI/ResourceBars/HPSPBars/SPBarFG
 	hp_bar.material_override = hp_bar.material_override.duplicate()
 	sp_bar.material_override = sp_bar.material_override.duplicate()
 	
-	hp = max_hp
+	enemy_stats.hp = enemy_stats.max_hp
 	var collision_shape: CollisionShape3D = patrol_boundary.get_node("Range")
 	var shape = collision_shape.shape
 	
@@ -95,6 +84,8 @@ func _ready():
 	
 	if !IN_COMBAT:
 		pick_new_patrol_point()
+		
+	hitbox.hit_received.connect(_on_hit_received)
 		
 func _physics_process(delta: float) -> void:
 	'''
@@ -139,11 +130,11 @@ func _process(delta: float) -> void:
 	basic idea but modular
 	'''
 	if IN_COMBAT:
-		if sp < max_sp:
-			sp = min(sp + sp_regen_percent * max_sp * delta, max_sp)
+		if enemy_stats.sp < enemy_stats.max_sp:
+			enemy_stats.sp = min(enemy_stats.sp + enemy_stats.sp_regen_rate * delta, enemy_stats.max_sp)
 	elif !IN_COMBAT:
-		if hp < max_hp:
-			hp = min (hp + hp_regen_percent * max_hp * delta, max_hp)
+		if enemy_stats.hp < enemy_stats.max_hp:
+			enemy_stats.hp = min (enemy_stats.hp + enemy_stats.hp_regen_rate * delta, enemy_stats.max_hp)
 			
 	resource_bar_transition(delta)
 	
@@ -214,7 +205,10 @@ func _process_passive_state(delta: float):
 				
 				pick_new_patrol_point()
 				passive_state = ENEMY_STATES_PASSIVE.PATROL
-	
+
+func _on_hit_received(instigator, skill, damage, target_data) -> void:
+	enemy_stats.hp -= damage
+
 func _process_active_state(delta: float):
 	var distance_to_player = global_position.distance_to(player.global_position)
 	var distance_to_spawn = global_position.distance_to(spawn_position)
@@ -257,8 +251,8 @@ func _process_active_state(delta: float):
 
 func active_heal():
 	active_state = ENEMY_STATES_ACTIVE.CHASE
-	if hp < 0.1 * max_hp and randf() >= 0.3:
-		hp = min(hp + 100.0, max_hp)
+	if enemy_stats.hp < 0.1 * enemy_stats.max_hp and randf() >= 0.3:
+		enemy_stats.hp = min(enemy_stats.hp + 100.0, enemy_stats.max_hp)
 
 func enter_watch(duration: float = wait_time, return_home: bool = false) -> void:
 	passive_state = ENEMY_STATES_PASSIVE.WATCH
@@ -321,11 +315,6 @@ func exit_combat():
 	enter_watch(5.0, true)
 
 func walk_routine(move_speed: float) -> bool:
-	'''
-	activates regardless of ENEMY_ACTIVE or ENEMY_PASSIVE
-	move target switches between active patrol point or player location
-	when called enemy moves to target
-	'''
 	var to_target := move_target - global_position
 	to_target.y = 0.0
 	
@@ -359,11 +348,6 @@ func pick_new_patrol_point():
 	)
 	
 func chase_player(distance: float, move_speed: float):
-	'''
-	only called when player enters investigation radius
-	if IN_BATTLE -> move_speed = RUN_SPEED
-	if !IN_BATTLE -> move_speed = WALK_SPEED
-	'''	
 	if distance > ATTACK_RANGE:
 		var target_dir = (player.global_position - global_position).normalized()
 		velocity.x = target_dir.x * move_speed
@@ -397,8 +381,8 @@ func update_sprite(move_dir: Vector3):
 		sprite.play("attack_1")
 		
 func resource_bar_transition(delta: float):
-	var target_hp_pct = hp / max_hp
-	var target_sp_pct = sp / max_sp
+	var target_hp_pct = enemy_stats.hp / enemy_stats.max_hp
+	var target_sp_pct = enemy_stats.sp / enemy_stats.max_sp
 	
 	displayed_hp_pct = move_toward(
 		displayed_hp_pct,
@@ -417,10 +401,30 @@ func resource_bar_transition(delta: float):
 func resource_bar_visibility(text: String = "Enemy"):
 	$WorldUI/Label3D.text = text
 	$WorldUI/Label3D.visible = IN_COMBAT or is_hovered
-	$WorldUI/ResourceBars.visible = IN_COMBAT or is_hovered
+	$WorldUI/ResourceBars/HPSPBars.visible = IN_COMBAT or is_hovered
 
 func update_hp_bar():
-	($WorldUI/ResourceBars/HPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_hp_pct)
+	($WorldUI/ResourceBars/HPSPBars/HPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_hp_pct)
 
 func update_sp_bar():
-	($WorldUI/ResourceBars/SPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_sp_pct)
+	($WorldUI/ResourceBars/HPSPBars/SPBarFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_sp_pct)
+
+func update_cast_progress():
+	($WorldUI/ResourceBars/CastingUI/CastProgressFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_cast_pct)
+
+func start_progress_ui() -> void:
+	enemy_stats.cast = 0.0
+	displayed_cast_pct = 0.0
+	update_cast_progress()
+	
+	$WorldUI/ResourceBars/CastingUI.visible = true
+	
+func set_progress_ui(value: float) -> void:
+	enemy_stats.cast = clamp(value, 0.0, enemy_stats.max_cast)
+	displayed_cast_pct = enemy_stats.cast / enemy_stats.max_cast
+	
+	update_cast_progress()
+	
+func stop_progress_ui() -> void:
+	$WorldUI/ResourceBars/CastingUI.visible = false
+	enemy_stats.cast = 0.0

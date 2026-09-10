@@ -3,11 +3,11 @@ extends Node
 
 signal stats_changed
 
-@export var entity_stats: EntityStats
-@export var entity_skills: EntitySkills
-
 var _cache: Dictionary = {}
 var _dirty: bool = true
+
+@export var entity_stats: EntityStats
+@export var entity_skills: EntitySkills
 
 func _mark_dirty() -> void:
 	_dirty = true
@@ -48,13 +48,8 @@ func _recompute() -> void:
 						percent_of_current_sum += mod.value
 						
 		# (base + flats) * multiplier
-		#var sub_total: float = base + flat_sum
-		#sub_total += base * percent_additive_sum
-		#var final_value: float = sub_total * (1.0 + percent_of_current_sum)
-		
-		# (base * multiplier) + flats
-		var sub_total: float = base * percent_additive_sum
-		sub_total += flat_sum
+		var sub_total: float = base + flat_sum
+		sub_total += base * percent_additive_sum
 		var final_value: float = sub_total * (1.0 + percent_of_current_sum)
 		
 		_cache[stat_type] = final_value
@@ -75,25 +70,29 @@ func equip_skill(skill: SkillData) -> void:
 	_mark_dirty()
 	
 func get_base_stat(stat: int) -> float:
+	var data: float = 0.0
+	
 	if not is_instance_valid(entity_stats):
 		return 0.0
-		
+			
 	match stat:
-		StatModifierEntry.StatType.ATK: return entity_stats.atk
-		StatModifierEntry.StatType.DEF: return entity_stats.def
-		StatModifierEntry.StatType.ADR: return entity_stats.adr
-		StatModifierEntry.StatType.SPD: return entity_stats.spd
-		StatModifierEntry.StatType.MAX_HP: return entity_stats.max_hp
-		StatModifierEntry.StatType.MAX_SP: return entity_stats.max_sp
-		StatModifierEntry.StatType.HP_REGEN: return entity_stats.hp_regen_rate
-		StatModifierEntry.StatType.SP_REGEN: return entity_stats.sp_regen_rate
-		StatModifierEntry.StatType.XP_MULT: return entity_stats.xp_multiplier
-		StatModifierEntry.StatType.CAST_SPEED: return entity_stats.cast_speed
-	return 0.0
+		StatModifierEntry.StatType.ATK: data = entity_stats.atk
+		StatModifierEntry.StatType.DEF: data = entity_stats.def
+		StatModifierEntry.StatType.ADR: data = entity_stats.adr
+		StatModifierEntry.StatType.SPD: data = entity_stats.spd
+		StatModifierEntry.StatType.MAX_HP: data = entity_stats.max_hp
+		StatModifierEntry.StatType.MAX_SP: data = entity_stats.max_sp
+		StatModifierEntry.StatType.HP_REGEN: data = entity_stats.hp_regen_rate
+		StatModifierEntry.StatType.SP_REGEN: data = entity_stats.sp_regen_rate
+		StatModifierEntry.StatType.XP_MULT: data = entity_stats.xp_multiplier
+		StatModifierEntry.StatType.CAST_SPEED: data = entity_stats.cast_speed
+		
+	return data
 	
 func get_stat(stat: int) -> float:
 	if _dirty:
 		_recompute()
+	
 	return _cache.get(stat, get_base_stat(stat))
 	
 func get_stats_as_formula_dict() -> Dictionary:
@@ -107,7 +106,7 @@ func get_stats_as_formula_dict() -> Dictionary:
 		
 		if not key.is_empty():
 			out[key] = get_stat(stat_type)
-	
+				
 	return out
 	
 func has_flag(flag: int) -> bool:

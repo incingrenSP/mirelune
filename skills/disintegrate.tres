@@ -8,7 +8,6 @@
 
 [sub_resource type="Resource" id="Resource_1y8e5"]
 script = ExtResource("2_dktct")
-lock_on_radius = 10.0
 metadata/_custom_type_script = "uid://bp8tbm1bsorw1"
 
 [resource]
