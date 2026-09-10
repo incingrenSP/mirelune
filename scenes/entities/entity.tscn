@@ -18,7 +18,8 @@ script = ExtResource("1_wcjeu")
 
 [node name="StatComponent" parent="." unique_id=571686911 instance=ExtResource("2_366ky")]
 
-[node name="Hitbox" parent="." unique_id=1186791149 instance=ExtResource("3_2213q")]
+[node name="Hitbox" parent="." unique_id=1186791149 node_paths=PackedStringArray("stat_component") instance=ExtResource("3_2213q")]
+stat_component = NodePath("../StatComponent")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1288580069]
 shape = SubResource("BoxShape3D_ylx48")
