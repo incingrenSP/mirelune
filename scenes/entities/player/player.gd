@@ -72,7 +72,8 @@ func _ready():
 	skill_targeting.cast_cancelled.connect(_on_skill_cast_cancelled)
 	
 	sprite.animation_finished.connect(_on_animation_finished)
-
+	
+	hitbox.hit_received.connect(_on_hit_received)
 
 func _physics_process(delta: float) -> void:
 	if !is_on_floor():
@@ -241,6 +242,9 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 		
 		else:
 			print(">>> SUREHIT found nothing near the reticle: %s" % target_data.get("target_point"))
+
+func _on_hit_received(instigator, skill, damage, target_data) -> void:
+	player_stats.hp -= damage
 
 func try_to_interact(target: Interactable) -> void:
 	print("========================================")

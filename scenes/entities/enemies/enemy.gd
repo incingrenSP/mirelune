@@ -1,12 +1,19 @@
 class_name Enemy
 extends Entity
 
+enum AnimType {
+	LIGHT,
+	STRONG,
+	HEAVY
+}
+
 @onready var sprite: AnimatedSprite3D = $Visual/AnimatedSprite3D
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 @onready var patrol_boundary: Area3D = $PatrolZone
 
 @onready var stat_component: StatComponent = $StatComponent
 @onready var hitbox: Hitbox = $Hitbox
+@onready var targeting_controller: SkillTargetingController = $SkillTargetingController
 
 @export var enemy_stats: EntityStats
 @export var enemy_skills: EntitySkills
@@ -26,6 +33,15 @@ const ATTACK_RANGE := 1.5
 var attack_timer := 0.0
 var attack_cooldown_timer := 0.0
 var attack_landed := false
+
+var movement_locked := false
+var casting_state := false
+var attack := false
+var ranged_attack_started := false
+
+var skill_use_cd: float = 0.5
+var skill_use_timer: float = 0.0
+var anim: AnimType = AnimType.LIGHT
 
 var PATROL_RADIUS : float
 var DETECTION_RADIUS : float
@@ -49,6 +65,7 @@ enum ENEMY_STATES_PASSIVE {
 
 enum ENEMY_STATES_ACTIVE {
 	ATTACK,
+	RANGED_ATTACK,
 	CHASE,
 	RUN,
 	HEAL
@@ -86,25 +103,13 @@ func _ready():
 		pick_new_patrol_point()
 		
 	hitbox.hit_received.connect(_on_hit_received)
+	
+	targeting_controller.targeting_started.connect(_on_targeting_started)
+	targeting_controller.cast_started.connect(_on_skill_cast_started)
+	targeting_controller.cast_completed.connect(_on_skill_cast_completed)
+	targeting_controller.cast_cancelled.connect(_on_skill_cast_cancelled)
 		
 func _physics_process(delta: float) -> void:
-	'''
-	check if enemy is on floor
-	if enemy is in combat -> ENEMY_ACTIVE = on ENEMY_PASSIVE = off
-	if enemy is not in combat -> ENEMY_ACTIVE = off ENEMY_PASSIVE = on
-	
-	when in combat player should be in engage range
-	patrol radius is 10.0 units -> enemy ignores player
-	detection radius is 8.0 units (80%) -> enemy notices player -> waiting time increases between patrols
-	investigation radius is 6.0 units (60%) -> enemy walks towards player
-	engage radius is 4.0 units (40%) -> enemy actively chases and attacks player -> enemy enters IN_COMBAT + ENEMY_ACTIVE
-	
-	IN_BATTLE only off when player is out of patrol radius
-	enemy waits for wait_time and enters ENEMY_PASSIVE, !IN_BATTLE
-	
-	patrol radius is fixed others are dynamic but doesn't span outside the patrol radius
-	
-	'''	
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
 	else:
@@ -124,11 +129,6 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func _process(delta: float) -> void:
-	'''
-	enemy regens sp only when in combat
-	enemy regens hp only when out of combat
-	basic idea but modular
-	'''
 	if IN_COMBAT:
 		if enemy_stats.sp < enemy_stats.max_sp:
 			enemy_stats.sp = min(enemy_stats.sp + enemy_stats.sp_regen_rate * delta, enemy_stats.max_sp)
@@ -163,7 +163,7 @@ func _process_passive_state(delta: float):
 			if routine_enabled:
 				walk_routine(WALK_SPEED)
 			if distance_to_player >= DETECTION_RADIUS:
-				enter_watch(2.0)
+				enter_watch(1.0)
 			elif distance_to_player < INVESTIGATION_RADIUS:
 				enter_watch(2.0)
 				
@@ -210,6 +210,18 @@ func _on_hit_received(instigator, skill, damage, target_data) -> void:
 	enemy_stats.hp -= damage
 
 func _process_active_state(delta: float):
+	if movement_locked:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		
+		return
+		
+	if targeting_controller.state != SkillTargetingController.State.IDLE:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		
+		return
+	
 	var distance_to_player = global_position.distance_to(player.global_position)
 	var distance_to_spawn = global_position.distance_to(spawn_position)
 	
@@ -218,12 +230,21 @@ func _process_active_state(delta: float):
 			$WorldUI/Label3D.text = "Enemy on CHASE"
 			chase_player(distance_to_player, RUN_SPEED)
 			
+			var skill := _get_first_available_ranged_skill()
+			
+			if skill == null:
+				active_state = ENEMY_STATES_ACTIVE.CHASE
+				return
+			
 			if distance_to_player < ATTACK_RANGE and attack_cooldown_timer <= 0.0:
 				active_state = ENEMY_STATES_ACTIVE.ATTACK
 				var dir = (player.global_position - global_position)
 				dir.y = 0.0
 				update_sprite(dir.normalized())
 				
+			elif distance_to_player <= skill.range_value:
+				active_state = ENEMY_STATES_ACTIVE.RANGED_ATTACK
+			
 			elif distance_to_player > PATROL_RADIUS:
 				exit_combat()
 				
@@ -239,11 +260,24 @@ func _process_active_state(delta: float):
 			if not attack_landed and attack_timer >= attack_duration * 0.5:
 				attack_landed = true
 				
+				if is_instance_valid(player) and horizontal_distance_to_player() <= ATTACK_RANGE:
+					player.hitbox.receive_hit(self, null, {})
+				
 			if attack_timer >= attack_duration:
 				attack_timer = 0.0
 				attack_landed = false
 				attack_cooldown_timer = attack_cooldown
 				active_state = ENEMY_STATES_ACTIVE.CHASE
+		
+		ENEMY_STATES_ACTIVE.RANGED_ATTACK:
+			$WorldUI/Label3D.text = "Enemy on RANGED ATTACK"
+			velocity.x = 0.0
+			velocity.z = 0.0
+			update_sprite(Vector3.ZERO)
+			
+			if not ranged_attack_started:
+				ranged_attack_started = true
+				_start_ranged_skill()
 				
 		ENEMY_STATES_ACTIVE.HEAL:
 			$WorldUI/Label3D.text = "Enemy on HEAL"
@@ -259,7 +293,7 @@ func enter_watch(duration: float = wait_time, return_home: bool = false) -> void
 	
 	watch_timer = 0.0
 	watch_duration = duration
-	returning_home = returning_home
+	returning_home = return_home
 	
 	velocity.x = 0.0
 	velocity.z = 0.0
@@ -352,13 +386,158 @@ func chase_player(distance: float, move_speed: float):
 		var target_dir = (player.global_position - global_position).normalized()
 		velocity.x = target_dir.x * move_speed
 		velocity.z = target_dir.z * move_speed
-		velocity.y = 0.0
 		update_sprite(target_dir)
 	else:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		update_sprite(Vector3.ZERO)
+
+func _get_skill_animation(skill: SkillData) -> AnimType:
+	if skill.cast_time >= 1.5:
+		return AnimType.HEAVY
 		
+	elif skill.cast_time  >= 0.75:
+		return AnimType.STRONG
+		
+	else:
+		return AnimType.LIGHT
+		
+func _on_targeting_started(skill: SkillData) -> void:
+	casting_state = true
+	attack = false
+
+	update_sprite(Vector3.ZERO)
+
+func _on_skill_cast_started(skill: SkillData, target_data: Dictionary) -> void:
+	casting_state = false
+	attack = true
+	movement_locked = true
+
+	anim = _get_skill_animation(skill)
+
+	update_sprite(Vector3.ZERO)
+
+func _on_skill_cast_completed(skill: SkillData, target_data: Dictionary) -> void:
+	_execute_skill(skill, target_data)
+
+func _on_skill_cast_cancelled(skill: SkillData) -> void:
+	movement_locked = false
+	casting_state = false
+	attack = false
+
+	ranged_attack_started = false
+	active_state = ENEMY_STATES_ACTIVE.CHASE
+
+	update_sprite(Vector3.ZERO)
+
+func _on_animation_finished() -> void:
+	if not attack:
+		return
+
+	movement_locked = false
+	casting_state = false
+	attack = false
+
+	ranged_attack_started = false
+	attack_cooldown_timer = attack_cooldown
+	active_state = ENEMY_STATES_ACTIVE.CHASE
+
+	update_sprite(Vector3.ZERO)
+
+func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
+	enemy_stats.sp -= skill.sp_cost
+	skill_use_timer = skill_use_cd
+	
+	print("EXECUTE TARGET DATA = ", target_data)
+	print("Enemy used %s!" % skill.display_name)
+		
+	# Combat system / skill behavior goes here
+	if skill.attack_type == SkillData.AttackType.SUREHIT:
+		print("SUREHIT skill confirmed")
+		var target: Hitbox = target_data.get("target_entity", null)
+		
+		if is_instance_valid(target):
+			print("valid target confirmed")
+			var dmg := target.receive_hit(self, skill, target_data)
+			print(">>> Hit %s for %.1f damage" % [target.get_parent().name, dmg])
+		
+		else:
+			print(">>> SUREHIT found nothing near the reticle: %s" % target_data.get("target_point"))
+
+	elif skill.attack_type == SkillData.AttackType.SKILLSHOT:
+		pass
+		
+	elif skill.attack_type == SkillData.AttackType.AOE:
+		pass
+
+func _get_first_available_ranged_skill() -> SkillData:
+	if enemy_skills == null:
+		return null
+
+	for skill_id in enemy_skills.equipped_active_skills:
+		if skill_id.is_empty():
+			continue
+
+		var skill: SkillData = SkillDatabase.get_skill(skill_id)
+
+		if skill == null:
+			continue
+
+		if skill.sp_cost > enemy_stats.sp:
+			continue
+
+		if skill.attack_type == SkillData.AttackType.SUREHIT:
+			return skill
+
+		if skill.attack_type == SkillData.AttackType.SKILLSHOT:
+			return skill
+
+		if skill.attack_type == SkillData.AttackType.AOE:
+			return skill
+
+	return null
+
+func _start_ranged_skill() -> void:
+	if not is_instance_valid(player):
+		_finish_ranged_attack()
+		return
+		
+	if not IN_COMBAT:
+		_finish_ranged_attack()
+		return
+		
+	if enemy_skills == null:
+		push_warning("%s has no EntitySkills resource" % name)
+		_finish_ranged_attack()
+		return
+		
+	if enemy_skills.equipped_active_skills.is_empty():
+		push_warning("%s has no equipped active skills" % name)
+		_finish_ranged_attack()
+		return
+		
+	var skill_id: String = enemy_skills.equipped_active_skills[0]
+	
+	if skill_id.is_empty():
+		_finish_ranged_attack()
+		return
+	
+	var skill: SkillData = SkillDatabase.get_skill(skill_id)
+	
+	if skill == null:
+		push_warning("Could not find skill: " + skill_id)
+		_finish_ranged_attack()
+	
+	if skill.sp_cost > enemy_stats.sp:
+		_finish_ranged_attack()
+		return
+		
+	targeting_controller.start_ai_targeting(skill, player, 5.0)
+
+func _finish_ranged_attack() -> void:
+	ranged_attack_started = false
+	active_state = ENEMY_STATES_ACTIVE.CHASE
+
 func update_sprite(move_dir: Vector3):
 	var horizontal_dir := Vector2(move_dir.x, move_dir.z)
 	
@@ -368,6 +547,28 @@ func update_sprite(move_dir: Vector3):
 		facing_right = false
 		
 	sprite.flip_h = !facing_right
+	
+	if casting_state:
+		if sprite.animation != "casting":
+			sprite.play("casting")
+		return
+		
+	if attack:
+		var animation_name := ""
+		
+		match anim:
+			AnimType.LIGHT:
+				animation_name = "attack_light"
+			AnimType.STRONG:
+				animation_name = "attack_strong"
+			AnimType.HEAVY:
+				animation_name = "attack_heavy"
+
+		if sprite.animation != animation_name:
+			sprite.play(animation_name)
+
+		return
+			
 	
 	if horizontal_dir.length() > 0.01:
 		if IN_COMBAT:

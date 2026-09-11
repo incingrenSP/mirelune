@@ -6,21 +6,15 @@
 [ext_resource type="Resource" uid="uid://cwq6m8chfk3rh" path="res://scenes/entities/entity_stats.tres" id="3_27tcs"]
 [ext_resource type="Texture2D" uid="uid://djmbo7qba0lc8" path="res://graphics/characters/enemy/Attack_KG_1.png" id="4_fu215"]
 [ext_resource type="Resource" uid="uid://wrwq5dl33mxh" path="res://scenes/entities/entity_skills.tres" id="4_mag4a"]
+[ext_resource type="Resource" uid="uid://c20bxphmxqw1a" path="res://scenes/entities/enemies/enemy_stats.tres" id="5_0kssi"]
 [ext_resource type="Texture2D" uid="uid://cl3ijof3t8tba" path="res://graphics/characters/enemy/Attack_KG_2.png" id="5_27tcs"]
-[ext_resource type="Script" uid="uid://bcnhrikf6lmye" path="res://scenes/entities/entity_stats.gd" id="5_mag4a"]
+[ext_resource type="Resource" uid="uid://cgpft87jqtmue" path="res://scenes/entities/enemies/enemy_skills.tres" id="6_0kssi"]
 [ext_resource type="Texture2D" uid="uid://dye2osu4kv180" path="res://graphics/characters/enemy/Attack_KG_3.png" id="6_mag4a"]
 [ext_resource type="Texture2D" uid="uid://c4xf6ev8mbl6c" path="res://graphics/characters/enemy/Attack_KG_4.png" id="7_0kssi"]
 [ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="7_j3iiu"]
 [ext_resource type="Texture2D" uid="uid://bw6h8knxmf1yu" path="res://graphics/characters/enemy/Idle_Active.png" id="8_ljcf0"]
 [ext_resource type="Texture2D" uid="uid://c52dlderfkuj6" path="res://graphics/characters/enemy/Walking_Active.png" id="10_jokyc"]
 [ext_resource type="Texture2D" uid="uid://ycro61csyeey" path="res://graphics/characters/enemy/Walking_Passive.png" id="11_k75k7"]
-
-[sub_resource type="Resource" id="Resource_mag4a"]
-script = ExtResource("5_mag4a")
-display_name = "Ememiny"
-hp = 100.0
-sp = 50.0
-metadata/_custom_type_script = "uid://bcnhrikf6lmye"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_45afl"]
 atlas = ExtResource("4_fu215")
@@ -480,8 +474,8 @@ attack_duration = 0.5
 attack_cooldown = 1.0
 
 [node name="StatComponent" parent="." index="0" unique_id=571686911]
-entity_stats = SubResource("Resource_mag4a")
-entity_skills = ExtResource("4_mag4a")
+entity_stats = ExtResource("5_0kssi")
+entity_skills = ExtResource("6_0kssi")
 
 [node name="Hitbox" parent="." index="1" unique_id=1186791149]
 faction = "enemy"
@@ -538,7 +532,8 @@ material_override = SubResource("ShaderMaterial_rutlk")
 mesh = SubResource("QuadMesh_aqy0s")
 
 [node name="Label3D" type="Label3D" parent="WorldUI" index="1" unique_id=1758313167]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3576336, 0)
 visible = false
 pixel_size = 0.01
 billboard = 2
+text = "ENEMY"

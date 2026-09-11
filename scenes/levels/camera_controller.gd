@@ -13,7 +13,8 @@ extends Node3D
 @export var rotation_speed := 90.0
 
 # long-range skill portion
-@export var skill_distance: float = 12.0
+@export var skill_distance: float = 15.0
+@export var skill_range_threshold: float = 5.0
 
 var default_target: Marker3D
 var focus_target: Marker3D
@@ -66,3 +67,12 @@ func release_focus() -> void:
 	focus_offset = Vector3.ZERO
 	target_spring_length = default_distance
 	
+func set_skill_aiming(skill: SkillData) -> void:
+	if skill.range_value > skill_range_threshold:
+		target_spring_length = skill_distance
+	
+	else:
+		target_spring_length = default_distance
+		
+func stop_skill_aiming() -> void:
+	target_spring_length = default_distance

@@ -4,4 +4,6 @@
 
 [resource]
 script = ExtResource("1_ihkq6")
+max_sp = 500.0
+sp_regen_rate = 50.0
 metadata/_custom_type_script = "uid://bcnhrikf6lmye"

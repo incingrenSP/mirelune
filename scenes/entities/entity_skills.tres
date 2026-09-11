@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1_4o6h8")
+equipped_active_skills = Array[String](["0", "", ""])
 metadata/_custom_type_script = "uid://b2e42tfjjyb1i"

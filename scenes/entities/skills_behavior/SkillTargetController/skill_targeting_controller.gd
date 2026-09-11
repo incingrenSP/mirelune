@@ -23,9 +23,12 @@ var active_skill: SkillData
 var _indicator: RangeIndicator
 var _last_angle: float = 0.0
 var _last_world_offset: Vector3 = Vector3.ZERO
-#var _last_reticle_local: Vector3 = Vector3.ZERO
 var _cast_time_total: float = 0.0
 var _cast_time_remaining: float = 0.0
+
+var ai_target: Node3D
+var ai_tracking_speed: float = 5.0
+var ai_target_locked: bool = false
 
 var _cast_target_data: Dictionary = {}
 var _caster_hitbox: Hitbox
@@ -43,6 +46,10 @@ func _ready() -> void:
 	set_process(false)
 	
 func _process(delta: float) -> void:
+	if state == State.AIMING:
+		_process_ai_aiming(delta)
+		return
+	
 	if state != State.CASTING:
 		set_process(false)
 		return
@@ -65,10 +72,17 @@ func _complete_cast() -> void:
 	cast_completed.emit(skill, target_data)
 	
 func _reset_state() -> void:
+	var camera := get_tree().get_first_node_in_group("camera") as CameraController
+	
+	if camera:
+		camera.stop_skill_aiming()
+		
 	state = State.IDLE
 	_cast_target_data.clear()
-	
+
 	active_skill = null
+	ai_target = null
+	ai_target_locked = false
 	set_process(false)
 	
 	if is_instance_valid(_indicator):
@@ -178,6 +192,23 @@ func _resolve_surehit_target() -> Hitbox:
 	
 	return result
 
+func _process_ai_aiming(delta: float) -> void:
+	if not is_instance_valid(ai_target):
+		cancel()
+		return
+		
+	if ai_target_locked:
+		return
+		
+	var target_point := ai_target.global_position
+	
+	var current_point := caster.global_position + _last_world_offset
+	var weight := 1.0 - exp(-ai_tracking_speed * delta)
+	
+	var tracked_point := current_point.lerp(target_point, weight)
+	
+	update_aim(tracked_point)
+
 func start_targeting(skill: SkillData) -> void:
 	if skill == null:
 		push_warning("SkillTargetingController: SkillData is null")
@@ -193,6 +224,10 @@ func start_targeting(skill: SkillData) -> void:
 		
 	active_skill = skill
 	state = State.AIMING
+	
+	var camera := get_tree().get_first_node_in_group("camera") as CameraController
+	if camera:
+		camera.set_skill_aiming(active_skill)
 		
 	_ensure_indicator()
 	
@@ -208,7 +243,50 @@ func start_targeting(skill: SkillData) -> void:
 	
 	var facing := -caster.global_transform.basis.z
 	update_aim(caster.global_position + facing)
+
+func start_ai_targeting(skill: SkillData, target: Node3D, tracking_speed: float = 5.0) -> void:
+	if skill == null:
+		push_warning("SkillTargetingController: SkillData is null")
+		return
+		
+	if skill.category != SkillData.SkillCategory.ACTIVE:
+		push_warning("SkillTargetingController: tried to target a non-ACTIVE skill (%s)" % skill.id)
+		return
+		
+	if not is_instance_valid(caster):
+		push_error("SkillTargetingController: caster is invalid")
+		return
+		
+	if state != State.IDLE:
+		return
+		
+	active_skill = skill
+	ai_target = target
+	ai_tracking_speed = tracking_speed
+	ai_target_locked = false
+	state = State.AIMING
 	
+	var camera := get_tree().get_first_node_in_group("camera") as CameraController
+	if camera:
+		camera.set_skill_aiming(active_skill)
+		
+	_ensure_indicator()
+	
+	_indicator.top_level = false
+	_indicator.position = Vector3.ZERO
+	_indicator.rotation = Vector3.ZERO
+	
+	_configure_indicator_for_skill()
+	
+	_indicator.visible = true
+	
+	targeting_started.emit(active_skill)
+	
+	update_aim(ai_target.global_position)
+	
+	set_process(true)
+	
+
 func update_aim(world_point: Vector3) -> void:
 	if state != State.AIMING:
 		return
@@ -220,7 +298,9 @@ func update_aim(world_point: Vector3) -> void:
 func confirm() -> void:
 	if state != State.AIMING:
 		return
-		
+	
+	ai_target_locked = true
+	
 	_cast_target_data = _build_target_data()
 	
 	if active_skill.attack_type == SkillData.AttackType.SUREHIT:
