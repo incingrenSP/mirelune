@@ -29,6 +29,8 @@ var _cast_time_remaining: float = 0.0
 var ai_target: Node3D
 var ai_tracking_speed: float = 5.0
 var ai_target_locked: bool = false
+var ai_aim_timer: float = 0.0
+var ai_aim_duration: float = 2.0
 
 var _cast_target_data: Dictionary = {}
 var _caster_hitbox: Hitbox
@@ -47,6 +49,10 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	if state == State.AIMING:
+		if ai_aim_timer >= ai_aim_duration:
+			confirm()
+			return
+			
 		_process_ai_aiming(delta)
 		return
 	
@@ -169,7 +175,6 @@ func _resolve_surehit_target() -> Hitbox:
 	var lock_radius := 1.0
 	
 	if behavior is SureHitBehavior:
-		print("Hello surehit check passed")
 		lock_radius = behavior.lock_on_radius
 		
 	var aim_point := caster.global_position + _last_world_offset
@@ -206,6 +211,8 @@ func _process_ai_aiming(delta: float) -> void:
 	var weight := 1.0 - exp(-ai_tracking_speed * delta)
 	
 	var tracked_point := current_point.lerp(target_point, weight)
+	
+	ai_aim_timer += delta
 	
 	update_aim(tracked_point)
 
@@ -244,7 +251,7 @@ func start_targeting(skill: SkillData) -> void:
 	var facing := -caster.global_transform.basis.z
 	update_aim(caster.global_position + facing)
 
-func start_ai_targeting(skill: SkillData, target: Node3D, tracking_speed: float = 5.0) -> void:
+func start_ai_targeting(skill: SkillData, target: Node3D, tracking_speed: float = 5.0, aim_duration: float = 5.0) -> void:
 	if skill == null:
 		push_warning("SkillTargetingController: SkillData is null")
 		return
@@ -264,6 +271,10 @@ func start_ai_targeting(skill: SkillData, target: Node3D, tracking_speed: float 
 	ai_target = target
 	ai_tracking_speed = tracking_speed
 	ai_target_locked = false
+	
+	ai_aim_timer = 0.0
+	ai_aim_duration = aim_duration
+		
 	state = State.AIMING
 	
 	var camera := get_tree().get_first_node_in_group("camera") as CameraController
@@ -285,7 +296,6 @@ func start_ai_targeting(skill: SkillData, target: Node3D, tracking_speed: float 
 	update_aim(ai_target.global_position)
 	
 	set_process(true)
-	
 
 func update_aim(world_point: Vector3) -> void:
 	if state != State.AIMING:
@@ -324,6 +334,7 @@ func confirm() -> void:
 	_cast_time_remaining = _cast_time_total
 	
 	if is_instance_valid(caster.casting_progress_ui):
+		print("Progress UI found")
 		caster.start_progress_ui()
 		
 	cast_started.emit(active_skill, _cast_target_data)

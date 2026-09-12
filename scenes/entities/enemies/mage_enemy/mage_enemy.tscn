@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://daihmnr7cx7jw"]
+
+[ext_resource type="Script" uid="uid://d126qspia85lc" path="res://scenes/entities/enemies/enemy.gd" id="1_k6y6m"]
+
+[node name="MageEnemy" type="CharacterBody3D" unique_id=183086361]
+script = ExtResource("1_k6y6m")
+metadata/_custom_type_script = "uid://d126qspia85lc"

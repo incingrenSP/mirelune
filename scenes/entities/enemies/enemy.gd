@@ -14,6 +14,7 @@ enum AnimType {
 @onready var stat_component: StatComponent = $StatComponent
 @onready var hitbox: Hitbox = $Hitbox
 @onready var targeting_controller: SkillTargetingController = $SkillTargetingController
+@onready var casting_progress_ui: Node3D = $WorldUI/ResourceBars/CastingUI
 
 @export var enemy_stats: EntityStats
 @export var enemy_skills: EntitySkills
@@ -22,7 +23,7 @@ enum AnimType {
 @export var wait_time := 1.0
 @export var IN_COMBAT := false
 @export var attack_duration := 0.5
-@export var attack_cooldown := 1.0
+@export var attack_cooldown := 3.0
 
 const WALK_SPEED := 4.0
 const RUN_SPEED := 7.0
@@ -135,7 +136,7 @@ func _process(delta: float) -> void:
 	elif !IN_COMBAT:
 		if enemy_stats.hp < enemy_stats.max_hp:
 			enemy_stats.hp = min (enemy_stats.hp + enemy_stats.hp_regen_rate * delta, enemy_stats.max_hp)
-			
+	
 	resource_bar_transition(delta)
 	
 func _process_passive_state(delta: float):
@@ -261,7 +262,7 @@ func _process_active_state(delta: float):
 				attack_landed = true
 				
 				if is_instance_valid(player) and horizontal_distance_to_player() <= ATTACK_RANGE:
-					player.hitbox.receive_hit(self, null, {})
+					player.player_stats.hp -= enemy_stats.atk
 				
 			if attack_timer >= attack_duration:
 				attack_timer = 0.0
@@ -278,6 +279,11 @@ func _process_active_state(delta: float):
 			if not ranged_attack_started:
 				ranged_attack_started = true
 				_start_ranged_skill()
+						
+			if targeting_controller.state != SkillTargetingController.State.IDLE:
+				var skill := targeting_controller.active_skill
+				if skill and distance_to_player > skill.range_value:
+					targeting_controller.cancel()
 				
 		ENEMY_STATES_ACTIVE.HEAL:
 			$WorldUI/Label3D.text = "Enemy on HEAL"
@@ -407,6 +413,9 @@ func _on_targeting_started(skill: SkillData) -> void:
 	attack = false
 
 	update_sprite(Vector3.ZERO)
+	
+	if horizontal_distance_to_player() > skill.range_value:
+		_finish_ranged_attack()
 
 func _on_skill_cast_started(skill: SkillData, target_data: Dictionary) -> void:
 	casting_state = false
@@ -451,7 +460,6 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	print("EXECUTE TARGET DATA = ", target_data)
 	print("Enemy used %s!" % skill.display_name)
 		
-	# Combat system / skill behavior goes here
 	if skill.attack_type == SkillData.AttackType.SUREHIT:
 		print("SUREHIT skill confirmed")
 		var target: Hitbox = target_data.get("target_entity", null)
@@ -469,6 +477,8 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 		
 	elif skill.attack_type == SkillData.AttackType.AOE:
 		pass
+		
+	_finish_ranged_attack()
 
 func _get_first_available_ranged_skill() -> SkillData:
 	if enemy_skills == null:
@@ -502,10 +512,6 @@ func _start_ranged_skill() -> void:
 		_finish_ranged_attack()
 		return
 		
-	if not IN_COMBAT:
-		_finish_ranged_attack()
-		return
-		
 	if enemy_skills == null:
 		push_warning("%s has no EntitySkills resource" % name)
 		_finish_ranged_attack()
@@ -531,11 +537,14 @@ func _start_ranged_skill() -> void:
 	if skill.sp_cost > enemy_stats.sp:
 		_finish_ranged_attack()
 		return
-		
-	targeting_controller.start_ai_targeting(skill, player, 5.0)
+	
+	targeting_controller.start_ai_targeting(skill, player, 5.0, 2.0)
 
 func _finish_ranged_attack() -> void:
 	ranged_attack_started = false
+	movement_locked = false
+	casting_state = false
+	attack = false
 	active_state = ENEMY_STATES_ACTIVE.CHASE
 
 func update_sprite(move_dir: Vector3):
@@ -558,11 +567,11 @@ func update_sprite(move_dir: Vector3):
 		
 		match anim:
 			AnimType.LIGHT:
-				animation_name = "attack_light"
+				animation_name = "light_attack"
 			AnimType.STRONG:
-				animation_name = "attack_strong"
+				animation_name = "strong_attack"
 			AnimType.HEAVY:
-				animation_name = "attack_heavy"
+				animation_name = "heavy_attack"
 
 		if sprite.animation != animation_name:
 			sprite.play(animation_name)
@@ -579,7 +588,7 @@ func update_sprite(move_dir: Vector3):
 		sprite.play("idle")
 		
 	if active_state == ENEMY_STATES_ACTIVE.ATTACK:
-		sprite.play("attack_1")
+		sprite.play("attack")
 		
 func resource_bar_transition(delta: float):
 	var target_hp_pct = enemy_stats.hp / enemy_stats.max_hp
@@ -614,11 +623,12 @@ func update_cast_progress():
 	($WorldUI/ResourceBars/CastingUI/CastProgressFG.material_override as ShaderMaterial).set_shader_parameter("fill_amount", displayed_cast_pct)
 
 func start_progress_ui() -> void:
+	print("Start progress was called by Enemy Targeting controller")
 	enemy_stats.cast = 0.0
 	displayed_cast_pct = 0.0
 	update_cast_progress()
 	
-	$WorldUI/ResourceBars/CastingUI.visible = true
+	casting_progress_ui.visible = true
 	
 func set_progress_ui(value: float) -> void:
 	enemy_stats.cast = clamp(value, 0.0, enemy_stats.max_cast)
@@ -627,5 +637,5 @@ func set_progress_ui(value: float) -> void:
 	update_cast_progress()
 	
 func stop_progress_ui() -> void:
-	$WorldUI/ResourceBars/CastingUI.visible = false
+	casting_progress_ui.visible = false
 	enemy_stats.cast = 0.0

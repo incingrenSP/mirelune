@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://c4xf6ev8mbl6c" path="res://graphics/characters/enemy/Attack_KG_4.png" id="7_0kssi"]
 [ext_resource type="Shader" uid="uid://dufbu0l8ggn1f" path="res://shaders/resource_bars.gdshader" id="7_j3iiu"]
 [ext_resource type="Texture2D" uid="uid://bw6h8knxmf1yu" path="res://graphics/characters/enemy/Idle_Active.png" id="8_ljcf0"]
+[ext_resource type="Texture2D" uid="uid://bjj8g2hquhxcj" path="res://graphics/characters/enemy/Casting.png" id="9_ljcf0"]
 [ext_resource type="Texture2D" uid="uid://c52dlderfkuj6" path="res://graphics/characters/enemy/Walking_Active.png" id="10_jokyc"]
 [ext_resource type="Texture2D" uid="uid://ycro61csyeey" path="res://graphics/characters/enemy/Walking_Passive.png" id="11_k75k7"]
 
@@ -40,29 +41,41 @@ region = Rect2(400, 0, 100, 64)
 atlas = ExtResource("4_fu215")
 region = Rect2(500, 0, 100, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ir3tp"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(0, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_8tbu6"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(0, 0, 192, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_redeq"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(100, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_jokyc"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(192, 0, 192, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_qiqku"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(200, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_k75k7"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(384, 0, 192, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_loulj"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(300, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_3f2n7"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(576, 0, 192, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_vbslo"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(400, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_0m2b0"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(768, 0, 192, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jss6c"]
-atlas = ExtResource("5_27tcs")
-region = Rect2(500, 0, 100, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_blal5"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(960, 0, 192, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8he8v"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(1152, 0, 192, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8m407"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(1344, 0, 192, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v5ah5"]
+atlas = ExtResource("9_ljcf0")
+region = Rect2(1536, 0, 192, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2vtu"]
 atlas = ExtResource("6_mag4a")
@@ -100,6 +113,22 @@ region = Rect2(700, 0, 100, 64)
 atlas = ExtResource("6_mag4a")
 region = Rect2(800, 0, 100, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_itopj"]
+atlas = ExtResource("8_ljcf0")
+region = Rect2(0, 0, 100, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_su56v"]
+atlas = ExtResource("8_ljcf0")
+region = Rect2(100, 0, 100, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ekbau"]
+atlas = ExtResource("8_ljcf0")
+region = Rect2(200, 0, 100, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tjj6h"]
+atlas = ExtResource("8_ljcf0")
+region = Rect2(300, 0, 100, 64)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrfb3"]
 atlas = ExtResource("7_0kssi")
 region = Rect2(0, 0, 100, 64)
@@ -120,21 +149,29 @@ region = Rect2(300, 0, 100, 64)
 atlas = ExtResource("7_0kssi")
 region = Rect2(400, 0, 100, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_itopj"]
-atlas = ExtResource("8_ljcf0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_ir3tp"]
+atlas = ExtResource("5_27tcs")
 region = Rect2(0, 0, 100, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_su56v"]
-atlas = ExtResource("8_ljcf0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_redeq"]
+atlas = ExtResource("5_27tcs")
 region = Rect2(100, 0, 100, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ekbau"]
-atlas = ExtResource("8_ljcf0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiqku"]
+atlas = ExtResource("5_27tcs")
 region = Rect2(200, 0, 100, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tjj6h"]
-atlas = ExtResource("8_ljcf0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_loulj"]
+atlas = ExtResource("5_27tcs")
 region = Rect2(300, 0, 100, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vbslo"]
+atlas = ExtResource("5_27tcs")
+region = Rect2(400, 0, 100, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jss6c"]
+atlas = ExtResource("5_27tcs")
+region = Rect2(500, 0, 100, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d86p1"]
 atlas = ExtResource("10_jokyc")
@@ -213,32 +250,41 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kuyxq")
 }],
-"loop": 1,
-"name": &"attack_1",
+"loop": 0,
+"name": &"attack",
 "speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ir3tp")
+"texture": SubResource("AtlasTexture_8tbu6")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_redeq")
+"texture": SubResource("AtlasTexture_jokyc")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_qiqku")
+"texture": SubResource("AtlasTexture_k75k7")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_loulj")
+"texture": SubResource("AtlasTexture_3f2n7")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_vbslo")
+"texture": SubResource("AtlasTexture_0m2b0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jss6c")
+"texture": SubResource("AtlasTexture_blal5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8he8v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8m407")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v5ah5")
 }],
 "loop": 1,
-"name": &"attack_2",
-"speed": 10.0
+"name": &"casting",
+"speed": 30.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -268,8 +314,25 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_37f1u")
 }],
+"loop": 0,
+"name": &"heavy_attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_itopj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_su56v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ekbau")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tjj6h")
+}],
 "loop": 1,
-"name": &"attack_3",
+"name": &"idle",
 "speed": 10.0
 }, {
 "frames": [{
@@ -288,25 +351,31 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bjrpu")
 }],
-"loop": 1,
-"name": &"attack_4",
+"loop": 0,
+"name": &"light_attack",
 "speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_itopj")
+"texture": SubResource("AtlasTexture_ir3tp")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_su56v")
+"texture": SubResource("AtlasTexture_redeq")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ekbau")
+"texture": SubResource("AtlasTexture_qiqku")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tjj6h")
+"texture": SubResource("AtlasTexture_loulj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vbslo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jss6c")
 }],
-"loop": 1,
-"name": &"idle",
+"loop": 0,
+"name": &"strong_attack",
 "speed": 10.0
 }, {
 "frames": [{
@@ -471,7 +540,7 @@ routine_enabled = true
 wait_time = 5.0
 IN_COMBAT = false
 attack_duration = 0.5
-attack_cooldown = 1.0
+attack_cooldown = 3.0
 
 [node name="StatComponent" parent="." index="0" unique_id=571686911]
 entity_stats = ExtResource("5_0kssi")
@@ -487,7 +556,9 @@ enemy = NodePath("..")
 [node name="AnimatedSprite3D" parent="Visual" parent_id_path=PackedInt32Array(846056127) index="0" unique_id=1045581970]
 billboard = 2
 sprite_frames = SubResource("SpriteFrames_essrt")
-animation = &"attack_3"
+animation = &"casting"
+frame = 6
+frame_progress = 0.6426668
 
 [node name="PatrolZone" type="Area3D" parent="." index="5" unique_id=1531947245]
 input_ray_pickable = false
