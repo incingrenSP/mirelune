@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://scn1nccsiawq"]
-
-[ext_resource type="Script" uid="uid://ctuoegnxfrxcr" path="res://scenes/entities/skills_behavior/SkillTargetController/skill_targeting_controller.gd" id="1_7yvrm"]
-
-[node name="SkillTargetingController" type="Node3D" unique_id=60548542]
-script = ExtResource("1_7yvrm")

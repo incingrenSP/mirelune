@@ -38,6 +38,8 @@ enum SkillFlag {
 @export var behavior: SkillBehaviorData = null
 @export var applied_statuses: Array[StatusApplication] = []
 
+@export var indiscriminate: bool = false
+
 # PASSIVE/CORE skill fields
 @export_group("PassiveCore Skill Data")
 @export var stat_modifiers: Array[StatModifierEntry] = []
@@ -79,3 +81,18 @@ func calculate_damage(caster_stats: Dictionary, target_stats: Dictionary) -> flo
 
 func has_flag(flag: SkillFlag) -> bool:
 	return flags.has(flag)
+	
+func compute_hit_direction(instigator: Node3D, target_data: Dictionary) -> Vector3:
+	if is_instance_valid(behavior) and behavior.strikes_from_above:
+		return Vector3.DOWN
+
+	if target_data.has("direction"):
+		var d: Vector3 = target_data["direction"]
+		return d.normalized() if d.length() > 0.0001 else Vector3.FORWARD
+
+	if target_data.has("target_point") and is_instance_valid(instigator):
+		var delta: Vector3 = (target_data["target_point"] as Vector3) - instigator.global_position
+		delta.y = 0.0
+		return delta.normalized() if delta.length() > 0.0001 else Vector3.FORWARD
+	
+	return Vector3.FORWARD

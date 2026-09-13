@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SkillBehaviorData" format=3 uid="uid://cl7kod2lfg1q1"]
 
-[ext_resource type="Script" uid="uid://bp8tbm1bsorw1" path="res://scenes/entities/skills_behavior/skill_behavior_data.gd" id="1_wjspb"]
+[ext_resource type="Script" uid="uid://bp8tbm1bsorw1" path="res://scenes/skills_behavior/skill_behavior_data.gd" id="1_wjspb"]
 
 [resource]
 script = ExtResource("1_wjspb")

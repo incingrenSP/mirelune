@@ -27,3 +27,18 @@ func find_nearest(point: Vector3, max_distance: float, exclude_faction: String =
 			best_dist = d
 			
 	return best
+	
+func find_within(point: Vector3, max_distance: float, exclude_faction: String = "") -> Array[Hitbox]:
+	var out: Array[Hitbox] = []
+	
+	for hb in _hitboxes:
+		if not is_instance_valid(hb):
+			continue
+			
+		if exclude_faction != "" and hb.faction == exclude_faction:
+			continue
+			
+		if hb.global_position.distance_to(point) <= max_distance:
+			out.append(hb)
+	
+	return out

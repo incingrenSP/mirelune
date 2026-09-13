@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SureHitBehavior" format=3 uid="uid://dg36pfew6mq8f"]
 
-[ext_resource type="Script" uid="uid://c5elm526ps78k" path="res://scenes/entities/skills_behavior/SureHit/surehit_behavior.gd" id="1_h31xi"]
+[ext_resource type="Script" uid="uid://c5elm526ps78k" path="res://scenes/skills_behavior/SureHit/surehit_behavior.gd" id="1_h31xi"]
 
 [resource]
 script = ExtResource("1_h31xi")

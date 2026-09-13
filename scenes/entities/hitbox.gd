@@ -25,6 +25,18 @@ func _exit_tree() -> void:
 	HitboxRegistry.unregister(self)
 	
 func receive_hit(instigator: Node3D, skill: SkillData, target_data: Dictionary = {}) -> float:
+	if not skill.indiscriminate and is_instance_valid(instigator):
+		var instigator_hitbox := instigator.get_node_or_null("Hitbox") as Hitbox
+		
+		if is_instance_valid(instigator_hitbox) and instigator_hitbox.faction == faction:
+			return 0.0
+			
+	var hit_direction := skill.compute_hit_direction(instigator, target_data)
+	
+	if is_instance_valid(guard) and guard.blocks(hit_direction):
+		hit_blocked.emit(instigator, skill, target_data)
+		return 0.0
+	
 	var instigator_stats := {}
 	var my_stats := {}
 	
