@@ -1,52 +1,26 @@
 shader_type spatial;
 
-render_mode blend_add, depth_draw_opaque, unshaded, cull_disabled;
+render_mode unshaded, cull_disabled, blend_add;
 
-uniform sampler2D noise_texture : repeat_enable, filter_nearest;
-uniform vec4 color_bottom : source_color = vec4(1.0, 0.9, 0.0, 1.0);
-uniform vec4 color_mid : source_color = vec4(1.0, 0.4, 0.0, 1.0);
-uniform vec4 color_top : source_color = vec4(0.8, 0.1, 0.0, 1.0);
-uniform float speed = 1.5;
-uniform float distortion_strength = 0.2;
-uniform float pixelation = 32.0;
-uniform float emission_energy = 2.0;
-
-void vertex() {
-	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
-			vec4(normalize(cross(vec3(0.0, 1.0, 0.0), MAIN_CAM_INV_VIEW_MATRIX[2].xyz)), 0.0),
-			vec4(0.0, 1.0, 0.0, 0.0),
-			vec4(normalize(cross(MAIN_CAM_INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0),
-			MODEL_MATRIX[3]);
-}
+uniform vec4 fire_color : source_color = vec4(1.0, 0.12, 0.01, 1.0);
+uniform float emission_strength = 4.0;
+uniform float distortion_strength = 0.15;
+uniform float distortion_speed = 2.0;
 
 void fragment() {
-    vec2 pixelated_uv = floor(UV * pixelation) / pixelation;
+    vec2 uv = UV;
 
-    vec2 scroll = pixelated_uv + vec2(0.0, -TIME * speed * -1.0);
-    float noise_val = texture(noise_texture, scroll).r;
+    float distortion = sin(
+        uv.y * 20.0 +
+        TIME * distortion_speed
+    ) * distortion_strength;
 
-    float offset = (noise_val - 0.5) * distortion_strength;
-    vec2 distorted_uv = pixelated_uv + vec2(offset, 0.0);
-    
-    float dist_x = abs(distorted_uv.x - 0.5);
-    float mask_x = 1.0 - smoothstep(0.0, 0.5, dist_x);
-    
-    float mask_y = smoothstep(0.1, 0.5, distorted_uv.y); 
+    uv.x += distortion;
 
-    float shape = mask_x * mask_y * 2.0;
-    shape = clamp(shape, 0.0, 1.0);
+    float edge = 1.0 - abs(UV.y - 0.5) * 2.0;
 
-    float fire_intensity = noise_val * shape;
+    vec3 color = fire_color.rgb * (0.7 + edge * 0.6);
 
-    fire_intensity = floor(fire_intensity * 4.0) / 4.0;
-
-    vec3 fire_color = color_top.rgb;
-    fire_color = mix(fire_color, color_mid.rgb, step(0.3, fire_intensity));
-    fire_color = mix(fire_color, color_bottom.rgb, step(0.6, fire_intensity));
-
-    float alpha = step(0.1, fire_intensity);
-
-    ALBEDO = fire_color;
-    EMISSION = fire_color * emission_energy;
-    ALPHA = alpha;
+    ALBEDO = color;
+    EMISSION = color * emission_strength;
 }

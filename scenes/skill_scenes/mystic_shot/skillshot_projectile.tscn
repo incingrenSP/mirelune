@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dfh17d7bx5t07"]
+
+[ext_resource type="PackedScene" uid="uid://cjiuaf6ioio5x" path="res://scenes/skill_scenes/projectile.tscn" id="1_5pgys"]
+[ext_resource type="Shader" uid="uid://gh80kpcayq5y" path="res://shaders/fire.gdshader" id="2_1pqnu"]
+[ext_resource type="Shader" uid="uid://bq3xvycm5isnj" path="res://scripts/glow.gdshader" id="3_56fci"]
+[ext_resource type="Shader" uid="uid://dy2yv8kpiun4c" path="res://scenes/skill_scenes/mystic_shot/skillshot_projectile_particle.gdshader" id="4_dmw47"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5pgys"]
+render_priority = 0
+shader = ExtResource("2_1pqnu")
+shader_parameter/fire_color = Color(1, 0.12, 0.01, 1)
+shader_parameter/emission_strength = 4.0
+shader_parameter/distortion_strength = 0.15
+shader_parameter/distortion_speed = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_5qbgb"]
+material = SubResource("ShaderMaterial_5pgys")
+radius = 0.2
+height = 0.4
+radial_segments = 16
+rings = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1pqnu"]
+render_priority = 0
+shader = ExtResource("3_56fci")
+shader_parameter/glow_color = Color(1, 0.1, 0.01, 1)
+shader_parameter/intensity = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_gkrjc"]
+material = SubResource("ShaderMaterial_1pqnu")
+radius = 0.3
+height = 0.6
+radial_segments = 16
+rings = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ypcnf"]
+shader = ExtResource("4_dmw47")
+
+[sub_resource type="SphereMesh" id="SphereMesh_0cc7o"]
+radius = 0.01
+height = 0.02
+
+[node name="SkillShot" unique_id=1054288201 instance=ExtResource("1_5pgys")]
+
+[node name="Visual" type="Node3D" parent="." index="0" unique_id=1045669780]
+
+[node name="Core" type="MeshInstance3D" parent="Visual" index="0" unique_id=49344010]
+mesh = SubResource("SphereMesh_5qbgb")
+
+[node name="Glow" type="MeshInstance3D" parent="Visual" index="1" unique_id=484679146]
+mesh = SubResource("SphereMesh_gkrjc")
+
+[node name="SkillTrail" type="GPUParticles3D" parent="Visual" index="2" unique_id=403645313]
+amount = 20
+lifetime = 0.3
+process_material = SubResource("ShaderMaterial_ypcnf")
+draw_pass_1 = SubResource("SphereMesh_0cc7o")
