@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://scn1nccsiawq"]
 
 [ext_resource type="Script" uid="uid://ctuoegnxfrxcr" path="res://scenes/skills_behavior/SkillTargetController/skill_targeting_controller.gd" id="1_7yvrm"]
+[ext_resource type="PackedScene" uid="uid://c1hwj04csovwx" path="res://scenes/skills_behavior/danger_sense.tscn" id="2_kkbph"]
 
 [node name="SkillTargetingController" type="Node3D" unique_id=60548542]
 script = ExtResource("1_7yvrm")
+
+[node name="DangerSense" parent="." unique_id=1766136278 instance=ExtResource("2_kkbph")]

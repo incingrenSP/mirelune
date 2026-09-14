@@ -83,6 +83,20 @@ func scan() -> Dictionary:
 				if caster._cast_time_remaining < best_ttl:
 					best_ttl = caster._cast_time_remaining
 					best = {
+						"kind": "surehit",
+						"skill": skill,
+						"time_to_impact": best_ttl,
+						"target_data": target_data,
+						"source": caster.caster
+					}
+					
+		else:
+			var target_data: Dictionary = caster._caster_target_data
+			
+			if SkillCombat.would_hit_point(skill, target_data, owner_entity.global_position):
+				if caster._cast_time_remaining < best_ttl:
+					best_ttl = caster._cast_time_remaining
+					best = {
 						"kind": "shape",
 						"skill": skill,
 						"time_to_impact": best_ttl,
@@ -95,7 +109,7 @@ func scan() -> Dictionary:
 			continue
 			
 		if proj.would_hit(owner_entity.global_position):
-			var dist: Vector3 = proj.global_position.distance_to(owner_entity.global_position)
+			var dist: float = proj.global_position.distance_to(owner_entity.global_position)
 			var ttl: float = dist / max(proj.speed, 0.01)
 			
 			if ttl < best_ttl:

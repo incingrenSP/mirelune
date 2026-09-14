@@ -12,6 +12,7 @@ signal targeting_started(skill: SkillData)
 signal cast_started(skill: SkillData, target_data: Dictionary)
 signal cast_completed(skill: SkillData, target_data: Dictionary)
 signal cast_cancelled(skill: SkillData)
+signal cast_interrupted(skill: SkillData, threat: Dictionary)
 
 @export var caster: Node3D
 @export var stat_component: StatComponent
@@ -35,6 +36,8 @@ var ai_aim_duration: float = 2.0
 var _cast_target_data: Dictionary = {}
 var _caster_hitbox: Hitbox
 
+@onready var danger_sense: DangerSense = $DangerSense
+
 func _ready() -> void:
 	if caster == null:
 		caster = get_parent() as Node3D
@@ -44,6 +47,8 @@ func _ready() -> void:
 	
 	if is_instance_valid(caster):
 		_caster_hitbox = caster.get_node_or_null("Hitbox") as Hitbox
+	
+	danger_sense.danger_detected.connect(_on_danger_detected)
 	
 	set_process(false)
 	
@@ -203,6 +208,18 @@ func _process_ai_aiming(delta: float) -> void:
 	ai_aim_timer += delta
 	
 	update_aim(tracked_point)
+
+func _on_danger_detected(threat: Dictionary) -> void:
+	if state == State.IDLE:
+		return
+		
+	if threat.time_to_impact > 1.0:
+		return
+		
+	var interrupted_skill := active_skill
+		
+	cancel()
+	cast_interrupted.emit(interrupted_skill, threat)
 
 func start_targeting(skill: SkillData) -> void:
 	if skill == null:

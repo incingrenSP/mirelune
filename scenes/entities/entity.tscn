@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://b7n6u5b50brhg" path="res://scenes/entities/interaction_area.gd" id="2_o12gi"]
 [ext_resource type="PackedScene" uid="uid://scn1nccsiawq" path="res://scenes/skills_behavior/SkillTargetController/SkillTargetingController.tscn" id="3_7agfi"]
 [ext_resource type="PackedScene" uid="uid://c2pg1pjddhqet" path="res://scenes/entities/hitbox.tscn" id="3_2213q"]
+[ext_resource type="Script" uid="uid://chqydr21glcj5" path="res://scenes/entities/guard.gd" id="6_2213q"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ylx48"]
 size = Vector3(1, 1.5, 0.2)
@@ -19,7 +20,6 @@ script = ExtResource("1_wcjeu")
 [node name="StatComponent" parent="." unique_id=571686911 instance=ExtResource("2_366ky")]
 
 [node name="Hitbox" parent="." unique_id=1186791149 node_paths=PackedStringArray("stat_component") instance=ExtResource("3_2213q")]
-faction = null
 stat_component = NodePath("../StatComponent")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1288580069]
@@ -46,3 +46,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49209273, 0)
 visible = false
 
 [node name="SkillTargetingController" parent="." unique_id=60548542 instance=ExtResource("3_7agfi")]
+
+[node name="Guard" type="Node" parent="." unique_id=104294016]
+script = ExtResource("6_2213q")

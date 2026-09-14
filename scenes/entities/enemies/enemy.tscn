@@ -536,11 +536,12 @@ size = Vector2(1, 0.075)
 script = ExtResource("2_j3iiu")
 enemy_stats = ExtResource("3_27tcs")
 enemy_skills = ExtResource("4_mag4a")
-routine_enabled = true
+routine_enabled = null
 wait_time = 5.0
-IN_COMBAT = false
-attack_duration = 0.5
-attack_cooldown = 3.0
+IN_COMBAT = null
+attack_duration = null
+attack_cooldown = null
+bar_smooth_speed = null
 
 [node name="StatComponent" parent="." index="0" unique_id=571686911]
 entity_stats = ExtResource("5_0kssi")
@@ -608,3 +609,6 @@ visible = false
 pixel_size = 0.01
 billboard = 2
 text = "ENEMY"
+
+[node name="SkillTargetingController" parent="." index="8" unique_id=60548542]
+exclude_own_faction = true

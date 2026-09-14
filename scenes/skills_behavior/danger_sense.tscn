@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c1hwj04csovwx"]
+
+[ext_resource type="Script" uid="uid://d2cotmq5258ap" path="res://scenes/skills_behavior/danger_sense.gd" id="1_r3gco"]
+
+[node name="DangerSense" type="Node" unique_id=1766136278]
+script = ExtResource("1_r3gco")

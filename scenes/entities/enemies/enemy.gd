@@ -16,6 +16,8 @@ enum AnimType {
 @onready var targeting_controller: SkillTargetingController = $SkillTargetingController
 @onready var casting_progress_ui: Node3D = $WorldUI/ResourceBars/CastingUI
 
+@onready var guard: Guard = $Guard
+
 @export var enemy_stats: EntityStats
 @export var enemy_skills: EntitySkills
 
@@ -30,6 +32,7 @@ const RUN_SPEED := 7.0
 const GRAVITY := 18.0
 const WAYPOINT_REACHED_DISTANCE := 0.2
 const ATTACK_RANGE := 1.5
+const REACTION_TIMER := 0.35
 
 var attack_timer := 0.0
 var attack_cooldown_timer := 0.0
@@ -77,6 +80,10 @@ var active_state: ENEMY_STATES_ACTIVE = ENEMY_STATES_ACTIVE.CHASE
 var watch_timer := 0.0
 var watch_duration := 0.0
 
+var reacting := false
+var react_move_dir := Vector3.ZERO
+var react_timer := 0.0
+
 func _ready():
 	sprite.scale = Vector3(2, 2, 2)
 	
@@ -109,6 +116,7 @@ func _ready():
 	targeting_controller.cast_started.connect(_on_skill_cast_started)
 	targeting_controller.cast_completed.connect(_on_skill_cast_completed)
 	targeting_controller.cast_cancelled.connect(_on_skill_cast_cancelled)
+	targeting_controller.cast_interrupted.connect(_on_skill_cast_interrupted)
 		
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -211,13 +219,11 @@ func _on_hit_received(instigator, skill, damage, target_data) -> void:
 	enemy_stats.hp -= damage
 
 func _process_active_state(delta: float):
-	if movement_locked:
-		velocity.x = 0.0
-		velocity.z = 0.0
-		
+	if reacting:
+		_process_reaction(delta)
 		return
-		
-	if targeting_controller.state != SkillTargetingController.State.IDLE:
+	
+	if movement_locked:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		
@@ -243,7 +249,7 @@ func _process_active_state(delta: float):
 				dir.y = 0.0
 				update_sprite(dir.normalized())
 				
-			elif distance_to_player <= skill.range_value:
+			elif distance_to_player <= skill.range_value and attack_cooldown_timer <= 0.0:
 				active_state = ENEMY_STATES_ACTIVE.RANGED_ATTACK
 			
 			elif distance_to_player > PATROL_RADIUS:
@@ -288,6 +294,26 @@ func _process_active_state(delta: float):
 		ENEMY_STATES_ACTIVE.HEAL:
 			$WorldUI/Label3D.text = "Enemy on HEAL"
 			active_heal()
+
+func _process_reaction(delta: float) -> void:
+	react_timer -= delta
+	
+	if react_timer <= 0.0:
+		reacting = false
+		
+		if is_instance_valid(guard):
+			guard.is_active = false
+		return
+		
+	if movement_locked:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		
+	else:
+		velocity.x = react_move_dir.x * RUN_SPEED
+		velocity.z = react_move_dir.z * RUN_SPEED
+		
+	update_sprite(react_move_dir)
 
 func active_heal():
 	active_state = ENEMY_STATES_ACTIVE.CHASE
@@ -452,6 +478,92 @@ func _on_animation_finished() -> void:
 	active_state = ENEMY_STATES_ACTIVE.CHASE
 
 	update_sprite(Vector3.ZERO)
+
+func _dodge_projectile(threat: Dictionary) -> Vector3:
+	var projectile: Projectile = threat.get("projectile")
+
+	if not is_instance_valid(projectile):
+		return Vector3.ZERO
+
+	var direction := projectile.direction
+	direction.y = 0.0
+	direction = direction.normalized()
+
+	var to_enemy := global_position - projectile.global_position
+	to_enemy.y = 0.0
+
+	# Perpendicular vector to projectile trajectory.
+	var perpendicular := Vector3(
+		-direction.z,
+		0.0,
+		direction.x
+	)
+
+	# Which side of the trajectory are we currently on?
+	var side := to_enemy.dot(perpendicular)
+
+	if side >= 0.0:
+		return perpendicular.normalized()
+
+	return -perpendicular.normalized()
+	
+func _dodge_shape(threat: Dictionary) -> Vector3:
+	var target_data: Dictionary = threat.get("target_data", {})
+
+	var center: Vector3
+
+	if target_data.has("target_point"):
+		center = target_data["target_point"]
+	elif target_data.has("origin"):
+		center = target_data["origin"]
+	else:
+		return Vector3.ZERO
+
+	var away := global_position - center
+	away.y = 0.0
+
+	if away.is_zero_approx():
+		# We're basically at the center.
+		# Pick an arbitrary escape direction.
+		return Vector3.FORWARD
+
+	return away.normalized()
+
+func _dodge_surehit(threat: Dictionary) -> Vector3:
+	var target_data: Dictionary = threat.get("target_data", {})
+
+	if not target_data.has("target_point"):
+		return Vector3.ZERO
+
+	var away: Vector3 = global_position - target_data["target_point"]
+	away.y = 0.0
+
+	if away.is_zero_approx():
+		return Vector3.ZERO
+
+	return away.normalized()
+
+func get_dodge_direction(threat: Dictionary) -> Vector3:
+	match threat.get("kind"):
+		"projectile":
+			return _dodge_projectile(threat)
+
+		"shape":
+			return _dodge_shape(threat)
+
+		"surehit":
+			return _dodge_surehit(threat)
+
+	return Vector3.ZERO
+
+func _on_skill_cast_interrupted(skill: SkillData, threat: Dictionary) -> void:
+	reacting = true
+	react_timer = REACTION_TIMER
+	
+	react_move_dir = get_dodge_direction(threat)
+	
+	if is_instance_valid(guard):
+		guard.is_active = false
 
 func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	enemy_stats.sp -= skill.sp_cost
