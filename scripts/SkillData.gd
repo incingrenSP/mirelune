@@ -70,8 +70,6 @@ func calculate_damage(caster_stats: Dictionary, target_stats: Dictionary) -> flo
 		push_error("Bad formula in %s: %s" % [id, expr.get_error_text()])
 		return 0.0
 	
-	print("Expr Vars: %s | Expr Vals: %s" % [vars, vals])
-	
 	var result = expr.execute(vals)
 	if expr.has_execute_failed():
 		push_error("SkillData '%s': damage_formula execution failed" % id)

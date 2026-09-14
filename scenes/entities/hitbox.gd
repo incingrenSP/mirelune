@@ -2,9 +2,11 @@ class_name Hitbox
 extends Area3D
 
 signal hit_received(instigator: Node3D, skill: SkillData, damage: float, target_data: Dictionary)
+signal hit_blocked(instigator: Node3D, skill: SkillData, target_data: Dictionary)
 
 @export var faction: String = "neutral"
 @export var stat_component: StatComponent
+@export var guard: Guard
 
 func _ready() -> void:
 	if stat_component == null:

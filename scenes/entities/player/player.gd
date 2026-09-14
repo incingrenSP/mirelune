@@ -229,20 +229,20 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	anim = _get_skill_animation(skill)
 	
 	print("Player used %s!" % skill.display_name)
-		
-	# Combat system / skill behavior goes here
-	if skill.attack_type == SkillData.AttackType.SUREHIT:
-		print("SUREHIT skill confirmed")
-		var target: Hitbox = target_data.get("target_entity", null)
-		
-		if is_instance_valid(target):
-			print("valid target confirmed")
-			var dmg := target.receive_hit(self, skill, target_data)
-			print(">>> Hit %s for %.1f damage" % [target.get_parent().name, dmg])
-		
-		else:
-			print(">>> SUREHIT found nothing near the reticle: %s" % target_data.get("target_point"))
-
+	
+	match skill.attack_type:
+		SkillData.AttackType.SUREHIT:
+			SkillCombat.resolve_surehit(skill, self, target_data)
+			
+		SkillData.AttackType.SKILLSHOT:
+			SkillCombat.resolve_skillshot(skill, self, target_data)
+			
+		SkillData.AttackType.AOE:
+			if skill.behavior is AOEBehavior and skill.behavior.shape == AOEBehavior.AOEShape.CONE:
+				SkillCombat.resolve_aoe_cone(skill, self, target_data)
+			else:
+				SkillCombat.resolve_aoe_circle(skill, self, target_data)
+	
 func _on_hit_received(instigator, skill, damage, target_data) -> void:
 	player_stats.hp -= damage
 

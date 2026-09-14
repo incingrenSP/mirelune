@@ -86,3 +86,46 @@ static func resolve_aoe_cone(skill: SkillData, instigator: Node3D, target_data: 
 		
 		if angle <= half_angle_rad:
 			hb.receive_hit(instigator, skill, target_data)
+			
+static func resolve_surehit(skill: SkillData, instigator: Node3D, target_data: Dictionary) -> void:
+	var target: Hitbox = target_data.get("target_entity")
+	if not is_instance_valid(target):
+		return  # nothing was locked at confirm time - SUREHIT has nothing to hit without an entity
+
+	var behavior := skill.behavior
+	var hit_count: int = behavior.hit_count if behavior is SureHitBehavior else 1
+	var hit_interval: float = behavior.hit_interval if behavior is SureHitBehavior else 0.0
+
+	for i in hit_count:
+		resolve_delayed_hit(skill, instigator, target_data, i * hit_interval, target)
+
+static func resolve_skillshot(skill: SkillData, instigator: Node3D, target_data: Dictionary) -> void:
+	var behavior := skill.behavior
+	if not (behavior is SkillShotBehavior):
+		push_warning("SkillCombat: '%s' has no SkillshotBehavior" % skill.id)
+		return
+
+	if behavior.shape == SkillShotBehavior.ShotShape.BEAM:
+		resolve_beam(skill, instigator, target_data)
+		return
+
+	if behavior.projectile_scene == null:
+		push_warning("SkillCombat: '%s' has no projectile_scene assigned" % skill.id)
+		return
+
+	print("SkillShot resolve registered")
+	var shots: int = behavior.barrage_count if behavior.shape == SkillShotBehavior.ShotShape.BARRAGE else 1
+	for i in shots:
+		_launch_projectile(skill, instigator, target_data, behavior, i * behavior.barrage_interval)
+
+static func _launch_projectile(skill: SkillData, instigator: Node3D, target_data: Dictionary, behavior: SkillShotBehavior, delay: float) -> void:
+	if delay > 0.0:
+		await instigator.get_tree().create_timer(delay).timeout
+		if not is_instance_valid(instigator):
+			return
+
+	var proj: Projectile = behavior.projectile_scene.instantiate()
+	instigator.get_tree().current_scene.add_child(proj)
+	print("launch projectile called")
+	print("Target Data= ", target_data)
+	proj.launch(skill, instigator, target_data["direction"], behavior.projectile_speed, behavior.width, skill.range_value, target_data["origin"])

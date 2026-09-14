@@ -173,29 +173,17 @@ func _recompute_pointer(world_point: Vector3) -> void:
 func _resolve_surehit_target() -> Hitbox:
 	var behavior := active_skill.behavior
 	var lock_radius := 1.0
-	
+
 	if behavior is SureHitBehavior:
 		lock_radius = behavior.lock_on_radius
-		
+
 	var aim_point := caster.global_position + _last_world_offset
 	var exclude := ""
-	
-	if exclude_own_faction and is_instance_valid(_caster_hitbox):
+
+	if exclude_own_faction and not active_skill.indiscriminate and is_instance_valid(_caster_hitbox):
 		exclude = _caster_hitbox.faction
-		
-	print("aim_point = ", aim_point)
-	print("lock_radius = ", lock_radius)
-	print("caster hitbox = ", _caster_hitbox)
-	print("excluded faction = '", exclude, "'")
-	
-	for hb in HitboxRegistry._hitboxes:
-		if is_instance_valid(hb):
-			print("  hurtbox ", hb.get_parent().name, " faction=", hb.faction, " dist=", hb.global_position.distance_to(aim_point))
-	
-	var result := HitboxRegistry.find_nearest(aim_point, lock_radius, exclude)
-	print("find_nearest result = ", result)
-	
-	return result
+
+	return HitboxRegistry.find_nearest(aim_point, lock_radius, exclude)
 
 func _process_ai_aiming(delta: float) -> void:
 	if not is_instance_valid(ai_target):

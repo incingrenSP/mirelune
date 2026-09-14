@@ -460,23 +460,18 @@ func _execute_skill(skill: SkillData, target_data: Dictionary = {}) -> void:
 	print("EXECUTE TARGET DATA = ", target_data)
 	print("Enemy used %s!" % skill.display_name)
 		
-	if skill.attack_type == SkillData.AttackType.SUREHIT:
-		print("SUREHIT skill confirmed")
-		var target: Hitbox = target_data.get("target_entity", null)
-		
-		if is_instance_valid(target):
-			print("valid target confirmed")
-			var dmg := target.receive_hit(self, skill, target_data)
-			print(">>> Hit %s for %.1f damage" % [target.get_parent().name, dmg])
-		
-		else:
-			print(">>> SUREHIT found nothing near the reticle: %s" % target_data.get("target_point"))
-
-	elif skill.attack_type == SkillData.AttackType.SKILLSHOT:
-		pass
-		
-	elif skill.attack_type == SkillData.AttackType.AOE:
-		pass
+	match skill.attack_type:
+		SkillData.AttackType.SUREHIT:
+			SkillCombat.resolve_surehit(skill, self, target_data)
+			
+		SkillData.AttackType.SKILLSHOT:
+			SkillCombat.resolve_skillshot(skill, self, target_data)
+			
+		SkillData.AttackType.AOE:
+			if skill.behavior is AOEBehavior and skill.behavior.shape == AOEBehavior.AOEShape.CONE:
+				SkillCombat.resolve_aoe_cone(skill, self, target_data)
+			else:
+				SkillCombat.resolve_aoe_circle(skill, self, target_data)
 		
 	_finish_ranged_attack()
 

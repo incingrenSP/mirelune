@@ -1,7 +1,11 @@
-[gd_resource type="Resource" script_class="SkillBehaviorData" format=3 uid="uid://cl7kod2lfg1q1"]
+[gd_resource type="Resource" script_class="SkillShotBehavior" format=3 uid="uid://cl7kod2lfg1q1"]
 
-[ext_resource type="Script" uid="uid://bp8tbm1bsorw1" path="res://scenes/skills_behavior/skill_behavior_data.gd" id="1_wjspb"]
+[ext_resource type="PackedScene" uid="uid://dfh17d7bx5t07" path="res://scenes/skill_scenes/mystic_shot/skillshot_projectile.tscn" id="1_002vt"]
+[ext_resource type="Script" uid="uid://c4b0qn27he6mu" path="res://scenes/skills_behavior/SkillShot/skillshot_behavior.gd" id="2_4mm15"]
 
 [resource]
-script = ExtResource("1_wjspb")
+script = ExtResource("2_4mm15")
+projectile_speed = 10.0
+width = 1.0
+projectile_scene = ExtResource("1_002vt")
 metadata/_custom_type_script = "uid://bp8tbm1bsorw1"
