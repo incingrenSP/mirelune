@@ -94,7 +94,7 @@ shader_parameter/Noise_Texture = SubResource("NoiseTexture2D_56fci")
 shader_parameter/Coloring_Texture = SubResource("GradientTexture2D_4bu48")
 shader_parameter/UV_Random = SubResource("NoiseTexture2D_lt88o")
 shader_parameter/Alpha_Texture = SubResource("GradientTexture2D_vcetw")
-shader_parameter/Speed = Vector2(0.675, 0.23)
+shader_parameter/Speed = Vector2(0.23, 0.675)
 shader_parameter/Emmision_Power = 1.0
 shader_parameter/Twist_Power = 0.99
 shader_parameter/Vertex_Noise_Texture = SubResource("NoiseTexture2D_nx3g6")
@@ -123,7 +123,7 @@ curve = SubResource("Curve_owssg")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5qbgb"]
 emission_shape = 1
 emission_sphere_radius = 0.5
-gravity = Vector3(2, 4, 0)
+gravity = Vector3(0, 2, 4)
 linear_accel_min = -0.5000022
 linear_accel_max = 0.49999776
 scale_min = 0.01
@@ -166,10 +166,10 @@ mesh = ExtResource("3_56fci")
 light_color = Color(1, 0.54509807, 0, 1)
 light_energy = 2.0
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Fire" index="1" unique_id=600781870]
+[node name="Effect" type="GPUParticles3D" parent="Fire" index="1" unique_id=600781870]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 cast_shadow = 0
-amount = 64
+amount = 12
 lifetime = 0.5
 trail_enabled = true
 trail_lifetime = 0.05
